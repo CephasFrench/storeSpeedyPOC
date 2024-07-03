@@ -16,7 +16,7 @@
 **Dates:** July 3 - July 9
 
 ### Goals:
-- Set up the frontend environment with Expo and React Native. - CAM
+- ~~Set up the frontend environment with Expo and React Native.~~ - CAM
 - Develop the shopping cart management system. - CAM
 - Create a basic user interface. - CAM
 
