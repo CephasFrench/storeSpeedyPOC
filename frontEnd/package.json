@@ -16,6 +16,7 @@
   "description": "",
   "dependencies": {
     "expo": "^51.0.18",
+    "expo-status-bar": "^1.12.1",
     "react-native": "^0.74.3"
   }
 }
