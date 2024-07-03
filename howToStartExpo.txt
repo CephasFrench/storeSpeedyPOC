@@ -1,0 +1,3 @@
+npm start
+xcode-select --install
+EXPO_TARGET=iPhone-11 expo start --ios
