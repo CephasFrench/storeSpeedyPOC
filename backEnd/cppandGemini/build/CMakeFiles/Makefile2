@@ -54,10 +54,10 @@ RM = /opt/homebrew/Cellar/cmake/3.29.5/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd
+CMAKE_SOURCE_DIR = /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build
+CMAKE_BINARY_DIR = /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/storeSpeedyPOC.dir/clean
 CMakeFiles/storeSpeedyPOC.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/storeSpeedyPOC.dir/build.make CMakeFiles/storeSpeedyPOC.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/storeSpeedyPOC.dir/build.make CMakeFiles/storeSpeedyPOC.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build/CMakeFiles --progress-num=1,2 "Built target storeSpeedyPOC"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build/CMakeFiles --progress-num=1,2 "Built target storeSpeedyPOC"
 .PHONY : CMakeFiles/storeSpeedyPOC.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/storeSpeedyPOC.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/storeSpeedyPOC.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build/CMakeFiles 0
 .PHONY : CMakeFiles/storeSpeedyPOC.dir/rule
 
 # Convenience name for target.

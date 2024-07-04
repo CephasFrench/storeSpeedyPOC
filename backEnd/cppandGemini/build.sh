@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the build directory
-BUILD_DIR="/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build"
+BUILD_DIR="/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build"
 
 # Navigate to your build directory
 cd "$BUILD_DIR" || { echo "Failed to navigate to build directory"; exit 1; }

@@ -1263,8 +1263,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build",
-		"source" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd"
+		"build" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build",
+		"source" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini"
 	},
 	"version" : 
 	{

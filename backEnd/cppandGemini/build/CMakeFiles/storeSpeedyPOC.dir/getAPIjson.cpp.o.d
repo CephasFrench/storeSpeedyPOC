@@ -1,5 +1,5 @@
 CMakeFiles/storeSpeedyPOC.dir/getAPIjson.cpp.o: \
-  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/getAPIjson.cpp \
+  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/getAPIjson.cpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/iostream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__assert \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__config \
