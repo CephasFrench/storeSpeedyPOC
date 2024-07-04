@@ -1,0 +1,17 @@
+{
+    "cmake.sourceDirectory": "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd",
+    "cmake.buildDirectory": "${workspaceFolder}/backEnd/build",
+    "files.associations": {
+        "iostream": "cpp"
+    },
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "/opt/homebrew/Cellar/jsoncpp/1.9.5/include"
+    ],
+    "C_Cpp.default.libPath": [
+        "/opt/homebrew/Cellar/jsoncpp/1.9.5/lib"
+    ],
+    "C_Cpp.default.compilerArgs": [
+        "-ljsoncpp"
+    ]
+}
