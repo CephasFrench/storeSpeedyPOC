@@ -1,18 +1,10 @@
 /*
     Author: Cameron Hardin
     Date Created:  6/12/24
-    Last Modified: 6/12/24
+    Last Modified: 7/3/24
 
     NOTES:
-    To run this program on macOS, navigate to the build directory and execute:
-    cmd + shift + P and select >CMake: Build
-    then run   ./build/storespeedy
-
-    OR (easier) paste this:
-    cd /Users/cameronhardin/Desktop/StoreSpeedy/build
-    cmake ..
-    cmake --build .
-    ./storespeedy
+    To run this program, simply go into the directory where build.sh is and run ./build.sh
 
     Prompt URL: 
     Project #: 804895084036
@@ -24,8 +16,7 @@
 #include <json/json.h>
 #include <sstream>
 
-// Individual using declarations to avoid namespace issues
-using std::cerr;
+using std::cerr; 
 using std::cin;
 using std::cout;
 using std::endl;
