@@ -10,7 +10,7 @@
 ## CAM TODO 2 WEEKS
 - ~~Expo and React~~
 - Shopping cart Object hierarchy
-- API calls to Gemini and JSON parsing
+- ~~API calls to Gemini and JSON parsing~~
 
 ## Sprint 1: Frontend Development
 **Dates:** July 3 - July 9
@@ -65,12 +65,12 @@
 **Dates:** July 17 - July 23
 
 ### Goals:
-- Integrate the Gemini API using Curl and Jsoncpp.
+- ~~Integrate the Gemini API using Curl and Jsoncpp.~~
 - Implement multithreading and developer tools.
 
 ### Tasks:
 #### API Integration (July 17 - July 18)
-- Implement API calls to the Gemini API using Curl.
+- ~~Implement API calls to the Gemini API using Curl.~~
 - Parse JSON responses using Jsoncpp.
 
 #### Multithreading (July 19 - July 20)
