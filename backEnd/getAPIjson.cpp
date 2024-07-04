@@ -21,7 +21,7 @@
 
 #include <iostream>
 #include <curl/curl.h>
-#include <json/json.h> // Include a JSON library to parse the response
+#include <json/json.h>
 #include <sstream>
 
 // Individual using declarations to avoid namespace issues
@@ -77,7 +77,8 @@ string performPostRequest(const string& url, struct curl_slist* headers, const s
         if(res != CURLE_OK) {
             cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << endl;
         } else {
-            cout << "Gemini API successfully called with the prompt." << endl;
+            cout << "API successfully called with the prompt." << endl;
+            cout << "Response received: " << readBuffer << endl; // Print the raw response
         }
 
         curl_easy_cleanup(curl);
@@ -101,16 +102,47 @@ void parseAndDisplayJson(const string& response)
 
     std::istringstream responseStream(response);
     if (Json::parseFromStream(readerBuilder, responseStream, &jsonResponse, &errors)) {
-        if (jsonResponse.isObject() && jsonResponse.isMember("greeting") && jsonResponse.isMember("timestamp") && jsonResponse.isMember("status")) {
-            cout << "Greeting: " << jsonResponse["greeting"].asString() << endl;
-            cout << "Timestamp: " << jsonResponse["timestamp"].asString() << endl;
-            cout << "Status: " << jsonResponse["status"].asString() << endl;
+        if (jsonResponse.isObject() && jsonResponse.isMember("candidates")) {
+            const Json::Value& candidates = jsonResponse["candidates"];
+            if (candidates.isArray() && !candidates.empty()) {
+                const Json::Value& content = candidates[0]["content"]["parts"];
+                if (content.isArray() && !content.empty()) {
+                    string text = content[0]["text"].asString();
+                    
+                    // Remove backticks and "json" keyword
+                    size_t firstBacktick = text.find("```json\n");
+                    if (firstBacktick != string::npos) {
+                        text.erase(firstBacktick, 7); // Remove "```json\n"
+                    }
+                    size_t lastBacktick = text.rfind("\n```");
+                    if (lastBacktick != string::npos) {
+                        text.erase(lastBacktick, 4); // Remove "\n```"
+                    }
+                    
+                    // Parse the cleaned JSON text
+                    std::istringstream cleanedStream(text);
+                    if (Json::parseFromStream(readerBuilder, cleanedStream, &jsonResponse, &errors)) {
+                        if (jsonResponse.isObject() && jsonResponse.isMember("greeting") && jsonResponse.isMember("timestamp") && jsonResponse.isMember("status")) {
+                            cout << "Greeting: " << jsonResponse["greeting"].asString() << endl;
+                            cout << "Timestamp: " << jsonResponse["timestamp"].asString() << endl;
+                            cout << "Status: " << jsonResponse["status"].asString() << endl;
+                        } else {
+                            cerr << "Invalid JSON format received: " << text << endl;
+                        }
+                    } else {
+                        cerr << "Failed to parse cleaned JSON response: " << errors << endl;
+                        cerr << "Cleaned response received: " << text << endl;
+                    }
+                } else {
+                    cerr << "No parts found in content: " << response << endl;
+                }
+            } else {
+                cerr << "No candidates found in response: " << response << endl;
+            }
         } else {
-            cerr << "Invalid JSON format received: " << response << endl;
+            cerr << "Failed to parse JSON response: " << errors << endl;
+            cerr << "Response received: " << response << endl;
         }
-    } else {
-        cerr << "Failed to parse JSON response: " << errors << endl;
-        cerr << "Response received: " << response << endl;
     }
 }
 
@@ -125,7 +157,7 @@ void parseAndDisplayJson(const string& response)
 int main()
 {
     char debugChoice;
-    cout << "Start debugging session? (y/n): ";
+    cout << "Would you like to manually test JSON functionality? (y/n): ";
     cin >> debugChoice;
 
     if (debugChoice == 'y' || debugChoice == 'Y') {
@@ -137,22 +169,36 @@ int main()
         return 0;
     }
 
-    const string url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag";
+    const string url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag";
     const string jsonData = R"({
-        "prompt": {
-            "text": "Please respond to this prompt with a JSON object in the following format: {\"greeting\": \"Hello!\", \"timestamp\": \"<current date and time>\", \"status\": \"success\"}."
-        }
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": "Please respond to this prompt with a JSON object in the following format: {\"greeting\": \"Hello!\", \"timestamp\": \"<current date and time>\", \"status\": \"success\"}."
+                    }
+                ]
+            }
+        ]
     })";
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
     struct curl_slist* headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
-    headers = curl_slist_append(headers, "Authorization: Bearer AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag");
+
+    if (headers == NULL) {
+        cerr << "Failed to set HTTP headers" << endl;
+        return 1;
+    }
 
     string response = performPostRequest(url, headers, jsonData);
 
-    parseAndDisplayJson(response);
+    if (!response.empty()) {
+        parseAndDisplayJson(response);
+    } else {
+        cerr << "Empty response received" << endl;
+    }
 
     curl_slist_free_all(headers);
     curl_global_cleanup();
