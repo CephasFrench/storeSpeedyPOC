@@ -1,14 +1,14 @@
 # storeSpeedyPOC SPRINT Plan
 
 ## PETER TODO 2 WEEKS
-- Github set up
+- ~~Github set up~~
 - Maze find the distance from each node to each other node
 - Storing maze data
 - Setting up server
 - Integrate all components
 
 ## CAM TODO 2 WEEKS
-- Expo and React
+- ~~Expo and React~~
 - Shopping cart Object hierarchy
 - API calls to Gemini and JSON parsing
 
@@ -22,8 +22,8 @@
 
 ### Tasks:
 #### Project Initialization (July 3 - July 4)
-- Set up the React Native project with Expo.
-- Configure the project structure and dependencies.
+- ~~Set up the React Native project with Expo.~~
+- ~~Configure the project structure and dependencies.~~
 
 #### Shopping Cart Management (July 5 - July 6)
 - Design and implement the object hierarchy for multiple shopping carts.
