@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build"
+			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -495,7 +495,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build/CMakeFiles/pkgRedirects"
+			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -555,7 +555,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd"
+			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini"
 		},
 		{
 			"name" : "CMAKE_INSTALL_NAME_TOOL",
@@ -1727,7 +1727,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build"
+			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build"
 		},
 		{
 			"name" : "storeSpeedyPOC_IS_TOP_LEVEL",
@@ -1751,7 +1751,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd"
+			"value" : "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini"
 		}
 	],
 	"kind" : "cache",

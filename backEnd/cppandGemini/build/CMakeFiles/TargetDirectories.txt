@@ -1,3 +1,3 @@
-/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build/CMakeFiles/storeSpeedyPOC.dir
-/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build/CMakeFiles/edit_cache.dir
-/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/build/CMakeFiles/rebuild_cache.dir
+/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build/CMakeFiles/storeSpeedyPOC.dir
+/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build/CMakeFiles/edit_cache.dir
+/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/cppandGemini/build/CMakeFiles/rebuild_cache.dir
