@@ -1,5 +1,9 @@
 # storeSpeedyPOC SPRINT Plan
 
+json:
+give gemini the first pdf page (aisles and whats on them) and give it the cart (items)
+Have it return specific list of aisles and items on the aisle
+
 ## PETER TODO 2 WEEKS
 - ~~Github set up~~
 - Maze find the distance from each node to each other node
