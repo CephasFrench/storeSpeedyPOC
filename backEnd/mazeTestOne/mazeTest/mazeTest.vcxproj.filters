@@ -32,5 +32,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\testMaze.txt" />
+    <Text Include="testMaze.txt" />
   </ItemGroup>
 </Project>
