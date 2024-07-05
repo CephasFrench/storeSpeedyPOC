@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
 import { AntDesign } from '@expo/vector-icons';
 
+const validLocations = ["Default", "Valley Mills"]; // Structure to hold the list of valid choices for locations
+
 export default function App() {
-    const [location, setLocation] = useState('Valley Mills'); // State to store the location
+    const [location, setLocation] = useState('Default'); // State to store the location
     const [item, setItem] = useState(''); // State to store the current input item
     const [groceryList, setGroceryList] = useState([]); // State to store the list of grocery items
 
@@ -23,21 +26,38 @@ export default function App() {
         setGroceryList(groceryList.filter((_, i) => i !== index));
     };
 
-    // Function to "save" the location, which currently just triggers an alert
-    const handleSaveLocation = () => {
-        Alert.alert("Success", "Location saved successfully!");
+    // Function to generate route and communicate with the C++ backend
+    const handleGenerateRoute = () => {
+        // Example data structure to send to the backend
+        const requestData = {
+            location,
+            groceryList
+        };
+
+        // Placeholder for backend communication
+        console.log("Sending data to backend:", requestData);
+
+        // Simulating a response from the backend
+        Alert.alert("Route", "Optimal route generated based on the provided list!");
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.header}>StoreSpeedy</Text>
-            <InputWithButton
-                label="Enter location..."
-                value={location}
-                onChangeText={setLocation}
-                buttonLabel="Save"
-                onPressButton={handleSaveLocation}
-            />
+            <Text style={styles.subHeader}>Navigate HEB Stores Efficiently</Text>
+            <Text style={styles.label}>Location:</Text>
+            <View style={styles.pickerContainer}>
+                <Picker
+                    selectedValue={location}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setLocation(itemValue)}
+                    mode="dropdown" // Ensures the picker expands only when clicked
+                >
+                    {validLocations.map((loc) => (
+                        <Picker.Item key={loc} label={loc} value={loc} />
+                    ))}
+                </Picker>
+            </View>
             <InputWithButton
                 label="Enter grocery item..."
                 value={item}
@@ -46,6 +66,9 @@ export default function App() {
                 onPressButton={handleAddItem}
             />
             <GroceryList items={groceryList} onRemoveItem={handleRemoveItem} />
+            <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
+                <Text style={styles.buttonText}>Generate Route</Text>
+            </TouchableOpacity>
             <StatusBar style="auto" />
         </View>
     );
@@ -64,7 +87,7 @@ function InputWithButton({ label, value, onChangeText, buttonLabel, onPressButto
             <Button
                 title={buttonLabel}
                 onPress={onPressButton}
-                color="#5e60ce"
+                color="#ff0000" // Red color for buttons
             />
         </View>
     );
@@ -93,36 +116,56 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'flex-start',
         paddingTop: 60,
         paddingHorizontal: 20,
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#fff0f0', // Set to a light red/white blend background
+        backgroundColor: '#ffffff', // White background
     },
     header: {
         fontSize: 26,
-        marginBottom: 20,
+        marginBottom: 10,
         color: '#1d3557',
         fontWeight: 'bold',
+    },
+    subHeader: {
+        fontSize: 18,
+        marginBottom: 20,
+        color: '#1d3557',
+    },
+    label: {
+        fontSize: 18,
+        marginBottom: 10,
+        color: '#1d3557',
+    },
+    pickerContainer: {
+        width: '100%',
+        marginBottom: 20,
+        borderColor: '#000000', // Black border
+        borderWidth: 1,
+        borderRadius: 5,
+        overflow: 'hidden',
+    },
+    picker: {
+        width: '100%',
     },
     inputContainer: {
         flexDirection: 'row',
         width: '100%',
         alignItems: 'center',
         marginBottom: 10,
+        borderColor: '#000000', // Black border
+        borderWidth: 1,
+        borderRadius: 5,
     },
     input: {
         height: 40,
         flex: 1,
-        borderWidth: 1,
+        borderWidth: 0, // Remove border from input field
         padding: 10,
-        borderColor: '#ced4da',
-        borderRadius: 5,
         backgroundColor: '#ffffff',
     },
     list: {
         width: '100%',
+        marginBottom: 20,
     },
     listItem: {
         flexDirection: 'row',
@@ -131,7 +174,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#ffffff',
         borderWidth: 1,
-        borderColor: '#adb5bd',
+        borderColor: '#000000', // Black border
         borderRadius: 5,
         marginBottom: 10,
     },
@@ -139,4 +182,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#343a40',
     },
+    button: {
+        backgroundColor: '#ff0000', // Red background
+        padding: 15,
+        borderRadius: 5,
+        marginBottom: 20,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#ffffff',
+        fontSize: 16,
+    },
 });
+

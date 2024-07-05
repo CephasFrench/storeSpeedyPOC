@@ -14,7 +14,7 @@ using std::string;
 
 const int MAX_RETRIES = 1;
 const string API_KEY = "AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag";
-const string URL     = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + API_KEY;
+const string URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + API_KEY;
 
 bool PERFORM_GENERAL_CALL = true; // Perform general API call when true
 
@@ -49,6 +49,7 @@ int main() {
             parseAndDisplayJson(response);
         } else {
             cerr << "Empty response received" << endl;
+            handleErrorResponse(response);
         }
 
         curl_slist_free_all(headers);
