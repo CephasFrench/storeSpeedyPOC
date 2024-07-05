@@ -11,7 +11,5 @@ std::string performPostRequest(const std::string& url, struct curl_slist* header
 void parseAndDisplayJson(const std::string& response);
 void parseAisleNeighborsJson(const std::string& response, std::vector<Aisle>& neighbors);
 void handleErrorResponse(const std::string& response);
-std::string pdfToBase64(const std::string& pdfFilePath);
-std::string base64_encode(unsigned char const* bytes_to_encode, unsigned int in_len);
 
 #endif // API_UTIL_H
