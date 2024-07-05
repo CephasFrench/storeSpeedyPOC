@@ -6,8 +6,16 @@ using namespace std;
 void Maze::fileParser() {
     // Open the file and check to see if it is open
     ifstream file(fileName);
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file");
+    try {
+        if (!file.is_open()) {
+            throw std::runtime_error("Failed to open file");
+        }
+
+        // Your file processing code here
+
+    }
+    catch (const std::runtime_error& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
         return;
     }
     // Now that the file is open, we can read the contents

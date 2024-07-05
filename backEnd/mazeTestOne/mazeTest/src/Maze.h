@@ -2,6 +2,8 @@
 #include "Node.h"
 #include <list>
 #include <utility>
+#include <stdexcept>
+#include <iostream>
 #include <string>
 #include <memory>
 #include <vector>
