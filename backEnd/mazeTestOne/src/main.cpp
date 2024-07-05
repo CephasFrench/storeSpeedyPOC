@@ -2,6 +2,8 @@
 #include <string>
 #include "Maze.h"
 
+using namespace std;
+
 int main() {
     Maze maze("maze.txt");
     // loop though and print maze array
@@ -11,5 +13,6 @@ int main() {
         }
         std::cout << std::endl;
     }
+
     return 0;
 }
