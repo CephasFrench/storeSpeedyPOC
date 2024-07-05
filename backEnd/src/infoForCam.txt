@@ -1,0 +1,12 @@
+Access Token:
+ya29.a0AXooCgscQkCVEV0C1NNeOC_YaV5_qIEP2b-tCD0_4JOYb51uWkR9K8WH2-TQnyqWJNDWt8HbnlTqmj_YAuxmXbF5m3xaP7PSwudl-l4I84j4zzkNQrAPD6D2oO04_amhI9VwswSphnZ4pCkFiM6L8cARwyJNksgF1cqhaCgYKAaUSARISFQHGX2MiIG0WY3_WjMvs5wacK5dD5A0171
+You will need to list the URL https://developers.google.com/oauthplayground as a valid redirect URI in your Google 
+APIs Console's project. Then enter the client ID and secret assigned to a web application on your project below:
+
+API key
+AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag
+
+Valley Mills neighbor info:
+Please analyze the image of the Valley Mills Waco store layout and provide a JSON object that lists all the aisles and their
+ neighboring aisles. Ensure to include any debugging messages that may help understand the processing steps.
+

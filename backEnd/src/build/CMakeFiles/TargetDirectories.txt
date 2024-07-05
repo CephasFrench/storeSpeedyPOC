@@ -1,0 +1,3 @@
+/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/build/CMakeFiles/storeSpeedyPOC.dir
+/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/build/CMakeFiles/edit_cache.dir
+/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/build/CMakeFiles/rebuild_cache.dir

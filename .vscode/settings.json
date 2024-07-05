@@ -2,7 +2,8 @@
     "cmake.sourceDirectory": "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd",
     "cmake.buildDirectory": "${workspaceFolder}/backEnd/build",
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "ostream": "cpp"
     },
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**",
