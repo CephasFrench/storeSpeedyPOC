@@ -33,3 +33,25 @@ void Maze::fileParser() {
         mazeArray.push_back(lineVector);
     }
 }
+// The goal of this function is to make it so that the nodeNameDistanceList is populated with the nodes
+// NOTE: This function does not store the distance of the nodes, only the name
+void Maze::storeNodes()
+{
+    // loop though the 2d vector
+    // for each element that is not a 1 or a 0, create a node
+    // add a counter of row and column to the node
+    int rowCounter = 0;
+    for (auto row : mazeArray)
+	{
+        int columnCounter = 0;
+		for (string element : row)
+		{
+			if (element != "1" && element != "0")
+			{
+                this->nodeNameAndLocation.push_back(make_pair(element, make_pair(rowCounter,columnCounter)));
+			}
+            columnCounter++;
+		}
+        rowCounter++;
+	}
+}

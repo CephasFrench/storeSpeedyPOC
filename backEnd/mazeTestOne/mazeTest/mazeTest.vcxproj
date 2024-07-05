@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="src\Maze.h" />
     <ClInclude Include="src\Node.h" />
+    <ClInclude Include="src\NodeFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\testMaze.txt" />

@@ -6,15 +6,8 @@
 using namespace std;
 
 int main() {
-    Maze maze("testMaze.txt");
 
-    // loop through and print maze array
-    for (auto row : maze.mazeArray) {
-        for (auto col : row) {
-            std::cout << col << "-";
-        }
-        std::cout << std::endl;
-    }
+    Maze maze("testMaze.txt");
 
     return 0;
 }
