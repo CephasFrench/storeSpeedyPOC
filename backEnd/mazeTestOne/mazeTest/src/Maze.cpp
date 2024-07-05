@@ -59,7 +59,22 @@ void Maze::storeNodes()
 
 bool Maze::isValid(int row, int col)
 {
-    return row >= 0 && col >= 0 && row < this->mazeArray.size() && col < this->mazeArray[0].size() && this->mazeArray[row][col] != "0";
+    if (row < 0) {
+        return false;
+    }
+    if (col < 0) {
+        return false;
+    }
+    if (row >= this->mazeArray.size()) {
+        return false;
+    }
+    if (col >= this->mazeArray[0].size()) {
+        return false;
+    }
+    if (this->mazeArray[row][col] == "0") {
+        return false;
+    }
+    return true;
 }
 
 int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
@@ -138,4 +153,67 @@ int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
 
     // If the end node is not reachable, return -1
     return -1;
+}
+
+// This function runs dijkstra's from every node to each other node to create the list of nodes
+// and their distance to each other node
+void Maze::makeNodes()
+{
+    // loop though every node, find distance from each node to itself
+    for (auto startNode : this->nodeNameAndLocation)
+    {
+        // make sure location is valid
+        try {
+            if (!isValid(startNode.second.first, startNode.second.second))
+            {
+                throw std::runtime_error("makeNodes(): Invalid node location " + startNode.first +
+                    " " + to_string(startNode.second.first) + " " + to_string(startNode.second.second) + "\n"
+                    + "rows:" + to_string(this->mazeArray.size()) + " cols:" + to_string(this->mazeArray[0].size()));
+            }
+            // Your file processing code 
+        }
+        catch (const std::runtime_error& e) 
+        {
+            std::cerr << "Exception: " << e.what() << std::endl;
+            return;
+        }
+
+        // Create the list to store the distances from the start node to each other node
+        vector<pair<string, double>> distances;
+
+        for (auto endNode : this->nodeNameAndLocation)
+        {
+            // Make sure the start node is not the same as the end node
+            if (startNode == endNode)
+			{
+				continue;
+			}
+            // make sure location is valid
+			try {
+				if (!isValid(endNode.second.first, endNode.second.second))
+				{
+					throw std::runtime_error("makeNodes(): Invalid node location");
+				}
+				// Your file processing code 
+			}
+			catch (const std::runtime_error& e) 
+			{
+				std::cerr << "Exception: " << e.what() << std::endl;
+				return;
+			}
+
+			// Calculate the distance from the start node to the end node
+			int distance = dijkstra(startNode.second, endNode.second);
+
+			// Add the end node and distance to the list
+			distances.push_back(make_pair(endNode.first, distance));
+        }
+
+        // Create a new node with the name of the start node and the distances to each other node
+        NodeFactory nodeFactory;
+        GraphNode node = nodeFactory.createNode(startNode.first, distances);
+
+        // Add the node to the list of nodes
+        this->Nodes.push_back(node);
+    }
 }

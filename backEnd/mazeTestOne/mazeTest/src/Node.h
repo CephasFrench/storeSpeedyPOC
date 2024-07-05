@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -20,6 +21,14 @@ public:
     }
     void addItems(string item) {
 		items.push_back(item);
+	}
+
+    void printNameAndEdges() {
+		cout << "Node: " << name << endl;
+		cout << "Edges: " << endl;
+		for (auto edge : edges) {
+			cout << "    " << edge.first << " " << edge.second << endl;
+		}
 	}
 
 private:
