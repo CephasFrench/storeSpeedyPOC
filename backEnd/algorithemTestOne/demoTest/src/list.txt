@@ -1,0 +1,58 @@
+node AisleNine
+cheerios
+syrup
+aisles BackWallDairy 6
+aisles MeatMarketRightWall 8
+aisles produce 10.5
+aisles AisleSevenTeen 6
+aisles bakery 9.5
+aisles entrance 8
+node MeatMarketRightWall
+groundBeef
+aisles BackWallDairy 9.75
+aisles AisleNine 8
+aisles produce 9
+aisles AisleSevenTeen 8
+aisles bakery 7
+aisles entrance 15.75
+node bakery
+freshBread
+aisles BackWallDairy 15.75
+aisles AisleNine 9.5
+aisles MeatMarketRightWall 7
+aisles produce 3
+aisles AisleSevenTeen 4
+aisles entrance 9
+node BackWallDairy
+milk
+eggs
+aisles AisleNine 6
+aisles MeatMarketRightWall 9.75
+aisles produce 18.5
+aisles AisleSevenTeen 11.25
+aisles bakery 15.75
+aisles entrance 9.5
+node entrance
+aisles BackWallDairy 9.5
+aisles AisleNine 8
+aisles MeatMarketRightWall 15.75
+aisles produce 11
+aisles AisleSevenTeen 7.25
+aisles bakery 9
+node produce
+broccoli
+aisles BackWallDairy 18.5
+aisles AisleNine 10.5
+aisles MeatMarketRightWall 9
+aisles AisleSevenTeen 6.5
+aisles bakery 3
+aisles entrance 11
+node AisleSevenTeen
+eggos
+aisles BackWallDairy 11.25
+aisles AisleNine 6
+aisles MeatMarketRightWall 8
+aisles produce 6.5
+aisles bakery 4
+aisles entrance 7.25
+exit
