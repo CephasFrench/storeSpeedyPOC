@@ -1,5 +1,5 @@
-CMakeFiles/storeSpeedyPOC.dir/main.cpp.o: \
-  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/main.cpp \
+CMakeFiles/Server.dir/main.cpp.o: \
+  /Users/cameronhardin/Desktop/storeSpeedyPOC/server/main.cpp \
   /Users/cameronhardin/Desktop/storeSpeedyPOC/server/crow_all.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/unordered_map \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__algorithm/is_permutation.h \
@@ -2096,24 +2096,4 @@ CMakeFiles/storeSpeedyPOC.dir/main.cpp.o: \
   /opt/homebrew/include/boost/date_time/posix_time/conversion.hpp \
   /opt/homebrew/include/boost/date_time/filetime_functions.hpp \
   /opt/homebrew/include/boost/date_time/posix_time/time_parsers.hpp \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/condition_variable \
-  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/api/api_util.h \
-  /opt/homebrew/include/json/json.h /opt/homebrew/include/json/config.h \
-  /opt/homebrew/include/json/allocator.h \
-  /opt/homebrew/include/json/version.h \
-  /opt/homebrew/include/json/json_features.h \
-  /opt/homebrew/include/json/forwards.h \
-  /opt/homebrew/include/json/reader.h /opt/homebrew/include/json/value.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/stack \
-  /opt/homebrew/include/json/writer.h \
-  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/api/../aisles/aisle.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/curl.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/curlver.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/system.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/easy.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/multi.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/urlapi.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/options.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/header.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/websockets.h \
-  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/mprintf.h
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/condition_variable

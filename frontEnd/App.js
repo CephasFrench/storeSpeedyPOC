@@ -28,17 +28,29 @@ export default function App() {
 
     // Function to generate route and communicate with the C++ backend
     const handleGenerateRoute = () => {
-        // Example data structure to send to the backend
+        // Data structure to send to the backend
         const requestData = {
             location,
             groceryList
         };
 
-        // Placeholder for backend communication
-        console.log("Sending data to backend:", requestData);
-
-        // Simulating a response from the backend
-        Alert.alert("Route", "Optimal route generated based on the provided list!");
+        // Send the data to the backend server
+        fetch('http://localhost:8080/generate-route', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+        .then(response => response.json())  // Expect JSON response
+        .then(data => {
+            console.log("Response from backend:", data);
+            Alert.alert("Route", `Response from backend: ${data.message}`);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            Alert.alert("Error", "Failed to communicate with the backend server.");
+        });
     };
 
     return (
@@ -194,4 +206,3 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
 });
-

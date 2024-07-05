@@ -1,3 +1,4 @@
+#include "crow_all.h"
 #include "api/api_util.h"
 #include <json/json.h>
 #include <iostream>
@@ -12,52 +13,45 @@ using std::cout;
 using std::endl;
 using std::string;
 
-const int MAX_RETRIES = 1;
-const string API_KEY = "AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag";
-const string URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + API_KEY;
-
-bool PERFORM_GENERAL_CALL = true; // Perform general API call when true
+extern std::string performPostRequest(const std::string& url, struct curl_slist* headers, const std::string& jsonData);
+extern void parseAndDisplayJson(const std::string& response);
+extern void handleErrorResponse(const std::string& response);
 
 int main() {
-    cout << "Starting main function..." << endl;
+    crow::SimpleApp app;
 
-    if (PERFORM_GENERAL_CALL) {
-        const string jsonData = R"({
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": "Please respond to this prompt with a JSON object in the following format: {\"greeting\": \"Hello!\", \"timestamp\": \"<current date and time>\", \"status\": \"success\"}. Additionally, please provide a message about what you did to answer the prompt for debugging purposes."
-                        }
-                    ]
-                }
-            ]
-        })";
-
-        curl_global_init(CURL_GLOBAL_DEFAULT);
-        struct curl_slist* headers = curl_slist_append(NULL, "Content-Type: application/json");
-
-        if (!headers) {
-            cerr << "Failed to set HTTP headers" << endl;
-            return 1;
+    CROW_ROUTE(app, "/generate-route").methods(crow::HTTPMethod::POST)([](const crow::request& req) {
+        auto jsonData = crow::json::load(req.body);
+        if (!jsonData) {
+            return crow::response(400, "Invalid JSON");
         }
 
-        cout << "Performing general API call..." << endl;
-        string response = performPostRequest(URL, headers, jsonData);
-        if (!response.empty()) {
-            cout << "General API call response: " << response << endl;
-            parseAndDisplayJson(response);
-        } else {
-            cerr << "Empty response received" << endl;
-            handleErrorResponse(response);
+        string location = jsonData["location"].s();
+        auto groceryList = jsonData["groceryList"];
+
+        // Example of generating a response
+        crow::json::wvalue response;
+        response["message"] = "Route generated successfully!";
+        response["location"] = location;
+        response["itemsReceived"] = groceryList.size();
+
+        return crow::response(response);
+    });
+
+    CROW_ROUTE(app, "/hello").methods(crow::HTTPMethod::POST)([](const crow::request& req) {
+        auto jsonData = crow::json::load(req.body);
+        if (!jsonData) {
+            return crow::response(400, "Invalid JSON");
         }
 
-        curl_slist_free_all(headers);
-    }
+        string greeting = jsonData["greeting"].s();
+        crow::json::wvalue response;
+        response["message"] = "Hello, " + greeting;
 
-    cout << "Cleaning up..." << endl;
-    curl_global_cleanup();
+        return crow::response(response);
+    });
 
-    cout << "Program completed." << endl;
+    app.port(8080).multithreaded().run();
+
     return 0;
 }

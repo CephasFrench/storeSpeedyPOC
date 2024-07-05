@@ -846,18 +846,16 @@ CMakeFiles/storeSpeedyPOC.dir/api/api_util.cpp.o: \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/cstdarg \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__memory/temp_value.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__split_buffer \
-  /opt/homebrew/opt/jsoncpp/include/json/json.h \
-  /opt/homebrew/opt/jsoncpp/include/json/config.h \
+  /opt/homebrew/include/json/json.h /opt/homebrew/include/json/config.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/istream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/ostream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/bitset \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/sstream \
-  /opt/homebrew/opt/jsoncpp/include/json/allocator.h \
-  /opt/homebrew/opt/jsoncpp/include/json/version.h \
-  /opt/homebrew/opt/jsoncpp/include/json/json_features.h \
-  /opt/homebrew/opt/jsoncpp/include/json/forwards.h \
-  /opt/homebrew/opt/jsoncpp/include/json/reader.h \
-  /opt/homebrew/opt/jsoncpp/include/json/value.h \
+  /opt/homebrew/include/json/allocator.h \
+  /opt/homebrew/include/json/version.h \
+  /opt/homebrew/include/json/json_features.h \
+  /opt/homebrew/include/json/forwards.h \
+  /opt/homebrew/include/json/reader.h /opt/homebrew/include/json/value.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/map \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__functional/is_transparent.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__iterator/ranges_iterator_traits.h \
@@ -888,7 +886,7 @@ CMakeFiles/storeSpeedyPOC.dir/api/api_util.cpp.o: \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/__functional/unary_negate.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/deque \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/stack \
-  /opt/homebrew/opt/jsoncpp/include/json/writer.h \
+  /opt/homebrew/include/json/writer.h \
   /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/api/../aisles/aisle.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/iostream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/curl/curl.h \

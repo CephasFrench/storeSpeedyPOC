@@ -13,11 +13,13 @@ set(AISLES_DIR ${SRC_DIR}/aisles)
 set(API_DIR ${SRC_DIR}/api)
 set(CART_DIR ${SRC_DIR}/cart)
 set(ITEMS_DIR ${SRC_DIR}/items)
+set(CROW_DIR /Users/cameronhardin/Desktop/storeSpeedyPOC/server)  # Set absolute path for Crow
 
-# Find the CURL library package, and make it a required dependency
+# Find the CURL and Boost library packages, and make them required dependencies
 find_package(CURL REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(Boost REQUIRED)
 pkg_check_modules(POPPLER REQUIRED poppler-cpp)
 
 # Include directories
@@ -26,6 +28,8 @@ include_directories(${AISLES_DIR})
 include_directories(${API_DIR})
 include_directories(${CART_DIR})
 include_directories(${ITEMS_DIR})
+include_directories(${CROW_DIR})  # Include Crow directory
+include_directories(${Boost_INCLUDE_DIRS})  # Include Boost directory
 include_directories(/opt/homebrew/opt/jsoncpp/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${POPPLER_INCLUDE_DIRS})
@@ -47,5 +51,5 @@ set(SOURCE_FILES
 # Add an executable target named 'storeSpeedyPOC' built from multiple source files
 add_executable(storeSpeedyPOC ${SOURCE_FILES})
 
-# Link the 'libcurl', 'jsoncpp', 'OpenCV', and 'poppler' libraries to the 'storeSpeedyPOC' target
-target_link_libraries(storeSpeedyPOC CURL::libcurl jsoncpp ${OpenCV_LIBS} ${POPPLER_LIBRARIES})
+# Link the 'libcurl', 'jsoncpp', 'OpenCV', 'poppler', and 'Boost' libraries to the 'storeSpeedyPOC' target
+target_link_libraries(storeSpeedyPOC CURL::libcurl jsoncpp ${OpenCV_LIBS} ${POPPLER_LIBRARIES} ${Boost_LIBRARIES})
