@@ -1,4 +1,5 @@
 #include "Maze.h"
+
 // Add this line to include the <sstream> header
 
 using namespace std;
@@ -54,4 +55,87 @@ void Maze::storeNodes()
 		}
         rowCounter++;
 	}
+}
+
+bool Maze::isValid(int row, int col)
+{
+    return row >= 0 && col >= 0 && row < this->mazeArray.size() && col < this->mazeArray[0].size() && this->mazeArray[row][col] != "0";
+}
+
+int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
+{
+    // Create a priority queue to store the nodes to be visited
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+
+    // Create a 2D vector to store the distances from the start node
+    vector<vector<int>> distance(mazeArray.size(), vector<int>(mazeArray[0].size(), INT_MAX));
+
+    // Set the distance of the start node to 0
+    distance[start.first][start.second] = 0;
+
+    // Push the start node into the priority queue
+    pq.push(make_pair(0, start));
+
+    // Create a vector to store the visited nodes
+    vector<vector<bool>> visited(mazeArray.size(), vector<bool>(mazeArray[0].size(), false));
+
+    // Loop until the priority queue is empty
+    while (!pq.empty())
+    {
+        // Get the current node from the priority queue
+        pair<int, pair<int, int>> current = pq.top();
+        pq.pop();
+
+        // Get the coordinates of the current node
+        int row = current.second.first;
+        int col = current.second.second;
+
+        // Check if the current node is the end node
+        if (current.second == end)
+        {
+            // Return the distance to the end node
+            return distance[row][col];
+        }
+
+        // Check if the current node has already been visited
+        if (visited[row][col])
+        {
+            continue;
+        }
+
+        // Mark the current node as visited
+        visited[row][col] = true;
+
+        // Get the neighbors of the current node
+        vector<pair<int, int>> neighbors = {
+            {row - 1, col}, // Up
+            {row + 1, col}, // Down
+            {row, col - 1}, // Left
+            {row, col + 1}  // Right
+        };
+
+        // Loop through the neighbors
+        for (const auto& neighbor : neighbors)
+        {
+            int neighborRow = neighbor.first;
+            int neighborCol = neighbor.second;
+
+            // Check if the neighbor is valid and not visited
+            if (isValid(neighborRow, neighborCol) && !visited[neighborRow][neighborCol])
+            {
+                // Calculate the distance to the neighbor
+                int neighborDistance = distance[row][col] + 1;
+
+                // Update the distance if it is shorter
+                if (neighborDistance < distance[neighborRow][neighborCol])
+                {
+                    distance[neighborRow][neighborCol] = neighborDistance;
+                    pq.push(make_pair(neighborDistance, make_pair(neighborRow, neighborCol)));
+                }
+            }
+        }
+    }
+
+    // If the end node is not reachable, return -1
+    return -1;
 }

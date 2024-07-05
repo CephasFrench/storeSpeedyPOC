@@ -2,6 +2,7 @@
 #include "NodeFactory.h"
 #include <list>
 #include <utility>
+#include <queue>
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -20,6 +21,7 @@ public:
         storeNodes();
     }
     
+    // TODO: MAKE THIS PRIVATE
 private:
     std::string fileName;
     vector<vector<string>> mazeArray;
@@ -27,5 +29,7 @@ private:
     
     void fileParser();
     void storeNodes();
+    bool isValid(int row, int col);
+    int dijkstra(pair<int,int> start, pair<int,int> end);
 
 };
