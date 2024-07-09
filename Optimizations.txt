@@ -8,14 +8,14 @@ Distance Calculation
 Algorithm Choices and Complexity
 
 	1.	Held-Karp Algorithm (Dynamic Programming for TSP)
-	•	Complexity:  O(2^L \cdot L^2) 
-	•	Use Case: Efficient and exact for small subsets  L < 20 .
+		•	Complexity:  O(2^L \cdot L^2) 
+		•	Use Case: Efficient and exact for small subsets  L < 20 .
 	2.	Dijkstra’s Algorithm
-	•	Complexity:  O((V + E) \log V) ; for dense graphs,  O(N^2 \log N) 
-	•	Use Case: Efficient for large graphs and general shortest path problems.
+		•	Complexity:  O((V + E) \log V) ; for dense graphs,  O(N^2 \log N) 
+		•	Use Case: Efficient for large graphs and general shortest path problems.
 	3.	A Algorithm*
-	•	Complexity:  O(b^d) 
-	•	Use Case: Efficient with a good heuristic; similar use case as Dijkstra’s but can be faster in specific scenarios.
+		•	Complexity:  O(b^d) 
+		•	Use Case: Efficient with a good heuristic; similar use case as Dijkstra’s but can be faster in specific scenarios.
 
 Efficiency Analysis
 
