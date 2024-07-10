@@ -38,5 +38,7 @@ Algorithm       Complexity            Detailed Runtime Estimate  When Preferred
 Held-Karp       O(2^L * L^2)          7,372,800 operations        L < 20, N < 1000, exact TSP
 Dijkstra's      O(N^2 log N)          10,000,000 operations       General shortest paths, large N
 
+(Best case analysis), best case is valid for L < 20 N < 1000 and gets better. Above is the worst best case.
+
 So for a car less than 20 items, Held-Karp is AT MINIMUM 35% faster.
 
