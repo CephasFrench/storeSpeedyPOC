@@ -20,17 +20,17 @@ Algorithm Choices and Complexity
 Efficiency Analysis
 
 	•	For  L < 20 :
-	•	Held-Karp: Preferred for solving the TSP exactly within the subset.
-	•	Efficient up to  N \approx 1000 ; beyond this, Dijkstra’s or A* becomes more practical for overall graph handling.
+		Held-Karp: Preferred for solving the TSP exactly within the subset.
+		Efficient up to  N \approx 1000 ; beyond this, Dijkstra’s or A* becomes more practical for overall graph handling.
 	•	For  N > 1000 :
-	•	Dijkstra’s or A*: More efficient for processing the entire graph due to polynomial complexity compared to Held-Karp’s exponential growth.
+		Dijkstra’s or A*: More efficient for processing the entire graph due to polynomial complexity compared to Held-Karp’s exponential growth.
 
 Recommendations
 
 	•	Use Held-Karp:
-	•	When  L < 20  and  N  is less than approximately 1000 for exact solutions in the subset.
+		When  L < 20  and  N  is less than approximately 1000 for exact solutions in the subset.
 	•	Use Dijkstra’s or A*:
-	•	When  N  is greater than approximately 1000 or for general pathfinding tasks outside the subset’s TSP context.
+		When  N  is greater than approximately 1000 or for general pathfinding tasks outside the subset’s TSP context.
 
 Table:
 Algorithm       Complexity            Detailed Runtime Estimate  When Preferred
