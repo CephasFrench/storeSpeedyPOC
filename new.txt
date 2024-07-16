@@ -1,0 +1,8 @@
+aislename
+    - item
+    - item
+aislename
+    - item
+    - item
+
+server sends this json, app displays it

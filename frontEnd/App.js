@@ -10,6 +10,7 @@ export default function App() {
     const [location, setLocation] = useState('Default'); // State to store the location
     const [item, setItem] = useState(''); // State to store the current input item
     const [groceryList, setGroceryList] = useState([]); // State to store the list of grocery items
+    const [aisles, setAisles] = useState([]); // State to store the aisles data
 
     // Function to add an item to the grocery list
     const handleAddItem = () => {
@@ -28,29 +29,20 @@ export default function App() {
 
     // Function to generate route and communicate with the C++ backend
     const handleGenerateRoute = () => {
-        // Data structure to send to the backend
-        const requestData = {
-            location,
-            groceryList
-        };
-
-        // Send the data to the backend server
-        fetch('http://localhost:8080/generate-route', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-        .then(response => response.json())  // Expect JSON response
-        .then(data => {
-            console.log("Response from backend:", data);
-            Alert.alert("Route", `Response from backend: ${data.message}`);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            Alert.alert("Error", "Failed to communicate with the backend server.");
-        });
+        fetch('http://localhost:8080/compute_path')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setAisles(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+                Alert.alert("Error", "Failed to fetch data from backend.");
+            });
     };
 
     return (
@@ -81,6 +73,7 @@ export default function App() {
             <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
                 <Text style={styles.buttonText}>Generate Route</Text>
             </TouchableOpacity>
+            <AisleList aisles={aisles} />
             <StatusBar style="auto" />
         </View>
     );
@@ -117,6 +110,25 @@ function GroceryList({ items, onRemoveItem }) {
                     <TouchableOpacity onPress={() => onRemoveItem(index)}>
                         <AntDesign name="delete" size={24} color="red" />
                     </TouchableOpacity>
+                </View>
+            )}
+            keyExtractor={(_, index) => index.toString()}
+        />
+    );
+}
+
+// Component for displaying the aisles and their items
+function AisleList({ aisles }) {
+    return (
+        <FlatList
+            style={styles.list}
+            data={aisles}
+            renderItem={({ item }) => (
+                <View style={styles.listItem}>
+                    <Text style={styles.aisleName}>{item.aisleName}</Text>
+                    {item.items.map((itemName, index) => (
+                        <Text key={index} style={styles.itemText}>{itemName}</Text>
+                    ))}
                 </View>
             )}
             keyExtractor={(_, index) => index.toString()}
@@ -193,6 +205,11 @@ const styles = StyleSheet.create({
     itemText: {
         fontSize: 16,
         color: '#343a40',
+    },
+    aisleName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#1d3557',
     },
     button: {
         backgroundColor: '#ff0000', // Red background

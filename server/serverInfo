@@ -4,3 +4,6 @@ Build files have been written to: /Users/cameronhardin/Crow/build/Crow/build
 
 cd ~/Desktop/storeSpeedyPOC/server/build
 ./Server
+
+
+npx expo star

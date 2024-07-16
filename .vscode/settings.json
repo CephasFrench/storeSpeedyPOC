@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd",
+    "cmake.sourceDirectory": "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src",
     "cmake.buildDirectory": "${workspaceFolder}/backEnd/build",
     "files.associations": {
         "iostream": "cpp",
