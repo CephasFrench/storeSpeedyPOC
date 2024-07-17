@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView, FlatList, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
 import { AntDesign } from '@expo/vector-icons'; // Import AntDesign
-import InputWithButton from './components/InputWithButton';
 
 const validLocations = ["Default", "Valley Mills"];
 
@@ -111,15 +110,39 @@ export default function App() {
                     ))}
                 </Picker>
             </View>
-            <InputWithButton
-                label="Enter grocery item..."
-                value={item}
-                onChangeText={setItem}
-                buttonLabel="Add"
-                onPressButton={handleAddItem}
-            />
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter grocery item..."
+                    value={item}
+                    onChangeText={setItem}
+                />
+                <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
+                    <Text style={styles.addButtonText}>Add</Text>
+                </TouchableOpacity>
+            </View>
             <Text style={styles.listHeader}>Grocery List</Text>
         </>
+    );
+
+    // Function to render grocery list items
+    const renderGroceryItem = ({ item, index }) => (
+        <View style={styles.listItem}>
+            <Text style={styles.itemText}>{item}</Text>
+            <TouchableOpacity onPress={() => handleRemoveItem(index)}>
+                <AntDesign name="delete" size={24} color="red" />
+            </TouchableOpacity>
+        </View>
+    );
+
+    // Function to render aisle items
+    const renderAisleItem = ({ item }) => (
+        <View style={styles.listItem}>
+            <Text style={styles.aisleName}>{item.aisleName}</Text>
+            {item.items.map((itemName, index) => (
+                <Text key={index} style={styles.itemText}>{itemName}</Text>
+            ))}
+        </View>
     );
 
     return (
@@ -127,37 +150,21 @@ export default function App() {
             <FlatList
                 ListHeaderComponent={renderHeader}
                 data={groceryList}
-                renderItem={({ item, index }) => (
-                    <View style={styles.listItem}>
-                        <Text style={styles.itemText}>{item}</Text>
-                        <TouchableOpacity onPress={() => handleRemoveItem(index)}>
-                            <AntDesign name="delete" size={24} color="red" />
-                        </TouchableOpacity>
-                    </View>
-                )}
+                renderItem={renderGroceryItem}
                 keyExtractor={(item, index) => index.toString()}
                 ListFooterComponent={
-                    <>
-                        <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
-                            <Text style={styles.buttonText}>Generate Route</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.listHeader}>Aisles</Text>
-                        <FlatList
-                            data={aisles}
-                            renderItem={({ item }) => (
-                                <View style={styles.listItem}>
-                                    <Text style={styles.aisleName}>{item.aisleName}</Text>
-                                    {item.items.map((itemName, index) => (
-                                        <Text key={index} style={styles.itemText}>{itemName}</Text>
-                                    ))}
-                                </View>
-                            )}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                        <StatusBar style="auto" />
-                    </>
+                    <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
+                        <Text style={styles.buttonText}>Generate Route</Text>
+                    </TouchableOpacity>
                 }
             />
+            <FlatList
+                data={aisles}
+                renderItem={renderAisleItem}
+                keyExtractor={(item, index) => index.toString()}
+                ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
+            />
+            <StatusBar style="auto" />
         </SafeAreaView>
     );
 }
@@ -196,6 +203,28 @@ const styles = StyleSheet.create({
     },
     picker: {
         width: '100%',
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    input: {
+        flex: 1,
+        borderColor: '#000',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginRight: 10,
+    },
+    addButton: {
+        backgroundColor: '#ff0000',
+        padding: 10,
+        borderRadius: 5,
+    },
+    addButtonText: {
+        color: '#ffffff',
+        fontSize: 16,
     },
     listHeader: {
         fontSize: 18,
