@@ -1,10 +1,1 @@
-[
-    {
-        "aisleName": "Aisle 1",
-        "items": ["item 1", "item 2"]
-    },
-    {
-        "aisleName": "Aisle 2",
-        "items": ["item 3", "item 4"]
-    }
-]
+{"items":[]}

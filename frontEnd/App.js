@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
@@ -13,19 +13,46 @@ export default function App() {
     const [groceryList, setGroceryList] = useState([]);
     const [aisles, setAisles] = useState([]);
 
+    useEffect(() => {
+        // Update the server with the new location whenever it changes
+        const updateLocation = async () => {
+            try {
+                await fetch('http://localhost:8080/update_location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ location }),
+                });
+            } catch (error) {
+                console.error('Error updating location:', error);
+                Alert.alert("Error", "Failed to update location.");
+            }
+        };
+
+        updateLocation();
+    }, [location]);
+
+    // Function to handle adding an item to the grocery list
     const handleAddItem = () => {
         if (!item.trim()) {
             Alert.alert("Validation", "Please enter an item name.");
             return;
         }
-        setGroceryList([...groceryList, item]);
+        const updatedGroceryList = [...groceryList, item];
+        setGroceryList(updatedGroceryList);
         setItem('');
+        handleUpdateAisleData(updatedGroceryList);
     };
 
+    // Function to handle removing an item from the grocery list
     const handleRemoveItem = (index) => {
-        setGroceryList(groceryList.filter((_, i) => i !== index));
+        const updatedGroceryList = groceryList.filter((_, i) => i !== index);
+        setGroceryList(updatedGroceryList);
+        handleUpdateAisleData(updatedGroceryList);
     };
 
+    // Function to fetch route from the backend and update the aisles state
     const handleGenerateRoute = () => {
         fetch('http://localhost:8080/compute_path')
             .then((response) => {
@@ -43,36 +70,62 @@ export default function App() {
             });
     };
 
+    // Function to update aisle data from the frontend to the backend
+    const handleUpdateAisleData = (updatedGroceryList) => {
+        const updatedData = { items: updatedGroceryList }; // Update this structure as needed
+        fetch('http://localhost:8080/update_aisle_data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                handleGenerateRoute(); // Update aisles after updating aisle data
+                Alert.alert("Success", "Aisle data updated successfully.");
+            })
+            .catch((error) => {
+                console.error('Error updating data:', error);
+                Alert.alert("Error", "Failed to update aisle data.");
+            });
+    };
+
+    // Function to render the header of the FlatList
+    const renderHeader = () => (
+        <>
+            <Text style={styles.header}>StoreSpeedy</Text>
+            <Text style={styles.subHeader}>Navigate HEB Stores Efficiently</Text>
+            <Text style={styles.label}>Location:</Text>
+            <View style={styles.pickerContainer}>
+                <Picker
+                    selectedValue={location}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setLocation(itemValue)}
+                    mode="dropdown"
+                >
+                    {validLocations.map((loc) => (
+                        <Picker.Item key={loc} label={loc} value={loc} />
+                    ))}
+                </Picker>
+            </View>
+            <InputWithButton
+                label="Enter grocery item..."
+                value={item}
+                onChangeText={setItem}
+                buttonLabel="Add"
+                onPressButton={handleAddItem}
+            />
+            <Text style={styles.listHeader}>Grocery List</Text>
+        </>
+    );
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <FlatList
-                ListHeaderComponent={
-                    <>
-                        <Text style={styles.header}>StoreSpeedy</Text>
-                        <Text style={styles.subHeader}>Navigate HEB Stores Efficiently</Text>
-                        <Text style={styles.label}>Location:</Text>
-                        <View style={styles.pickerContainer}>
-                            <Picker
-                                selectedValue={location}
-                                style={styles.picker}
-                                onValueChange={(itemValue) => setLocation(itemValue)}
-                                mode="dropdown"
-                            >
-                                {validLocations.map((loc) => (
-                                    <Picker.Item key={loc} label={loc} value={loc} />
-                                ))}
-                            </Picker>
-                        </View>
-                        <InputWithButton
-                            label="Enter grocery item..."
-                            value={item}
-                            onChangeText={setItem}
-                            buttonLabel="Add"
-                            onPressButton={handleAddItem}
-                        />
-                        <Text style={styles.listHeader}>Grocery List</Text>
-                    </>
-                }
+                ListHeaderComponent={renderHeader}
                 data={groceryList}
                 renderItem={({ item, index }) => (
                     <View style={styles.listItem}>

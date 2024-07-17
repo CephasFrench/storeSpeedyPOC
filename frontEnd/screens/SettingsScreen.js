@@ -1,11 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet, Switch, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Alert, Switch, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 
 export default function SettingsScreen() {
     const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
 
     const toggleNotifications = () => {
         setNotificationsEnabled(!notificationsEnabled);
+    };
+
+    // Function to handle server ping
+    const handlePingServer = () => {
+        fetch('http://localhost:8080/ping')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                Alert.alert("Success", "Server communication successful.");
+            })
+            .catch((error) => {
+                console.error('Error pinging server:', error);
+                Alert.alert("Error", "Failed to communicate with server.");
+            });
     };
 
     return (
@@ -19,6 +34,9 @@ export default function SettingsScreen() {
                         onValueChange={toggleNotifications}
                     />
                 </View>
+                <TouchableOpacity style={styles.button} onPress={handlePingServer}>
+                    <Text style={styles.buttonText}>Ping Server</Text>
+                </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
     );
@@ -46,5 +64,16 @@ const styles = StyleSheet.create({
     settingText: {
         fontSize: 16,
         color: '#1d3557',
+    },
+    button: {
+        backgroundColor: '#ff0000',
+        padding: 15,
+        borderRadius: 5,
+        marginBottom: 20,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#ffffff',
+        fontSize: 16,
     },
 });
