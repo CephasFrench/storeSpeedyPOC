@@ -9,10 +9,11 @@ import atexit
 import heapq
 
 # Define the image and text file paths
-image_path = '/Users/cameronhardin/Desktop/StoreSpeedy/Valley Mills Waco Store Guide Cleared2 pdf.png'
-array_file_path = '/Users/cameronhardin/Desktop/StoreSpeedy/vmstoretext.txt'
-readable_file_path = '/Users/cameronhardin/Desktop/StoreSpeedy/vmstoretext_readable.txt'
-path_file_path = '/Users/cameronhardin/Desktop/StoreSpeedy/vmstorepath.txt'
+image_path = os.path.join('Valley Mills Waco Store Guide Cleared2 pdf.png')
+array_file_path = os.path.join('vmstoretext.txt')
+readable_file_path = os.path.join('vmstoretext_readable.txt')
+path_file_path = os.path.join('vmstorepath.txt')
+
 
 # Scale factor for enlarging each pixel
 scale_factor = 2
