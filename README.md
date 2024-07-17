@@ -8,12 +8,12 @@ Have it return specific list of aisles and items on the aisle
 - ~~Github set up~~
 - Maze find the distance from each node to each other node
 - Storing maze data
-- Setting up server
+- ~~Setting up server~~
 - Integrate all components
 
 ## CAM TODO 2 WEEKS
 - ~~Expo and React~~
-- Shopping cart Object hierarchy
+- ~~Shopping cart Object hierarchy~~
 - ~~API calls to Gemini and JSON parsing~~
 
 ## Sprint 1: Frontend Development
@@ -22,7 +22,7 @@ Have it return specific list of aisles and items on the aisle
 ### Goals:
 - ~~Set up the frontend environment with Expo and React Native.~~ - CAM
 - Develop the shopping cart management system. - CAM
-- Create a basic user interface. - CAM
+- ~~Create a basic user interface.~~ - CAM
 
 ### Tasks:
 #### Project Initialization (July 3 - July 4)
@@ -30,7 +30,7 @@ Have it return specific list of aisles and items on the aisle
 - ~~Configure the project structure and dependencies.~~
 
 #### Shopping Cart Management (July 5 - July 6)
-- Design and implement the object hierarchy for multiple shopping carts.
+- ~~Design and implement the object hierarchy for multiple shopping carts.~~
 - Create components for adding, removing, and viewing cart items.
 
 #### Basic User Interface (July 7 - July 8)
@@ -45,12 +45,12 @@ Have it return specific list of aisles and items on the aisle
 **Dates:** July 10 - July 16
 
 ### Goals:
-- Set up the C++ server with Crow.
+- ~~Set up the C++ server with Crow.~~
 - Implement distance calculation and shortest path algorithms.
 
 ### Tasks:
 #### Server Setup (July 10 - July 11) - PETER
-- Set up the C++ server with the Crow library.
+- ~~Set up the C++ server with the Crow library.~~
 - Create basic endpoints to handle requests from the frontend.
 
 #### Distance Calculation (July 12 - July 13) - PETER

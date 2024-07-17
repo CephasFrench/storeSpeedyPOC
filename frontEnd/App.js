@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; // Import AntDesign
+import InputWithButton from './components/InputWithButton';
 
-const validLocations = ["Default", "Valley Mills"]; // Structure to hold the list of valid choices for locations
+const validLocations = ["Default", "Valley Mills"];
 
 export default function App() {
-    const [location, setLocation] = useState('Default'); // State to store the location
-    const [item, setItem] = useState(''); // State to store the current input item
-    const [groceryList, setGroceryList] = useState([]); // State to store the list of grocery items
-    const [aisles, setAisles] = useState([]); // State to store the aisles data
+    const [location, setLocation] = useState('Default');
+    const [item, setItem] = useState('');
+    const [groceryList, setGroceryList] = useState([]);
+    const [aisles, setAisles] = useState([]);
 
-    // Function to add an item to the grocery list
     const handleAddItem = () => {
         if (!item.trim()) {
             Alert.alert("Validation", "Please enter an item name.");
@@ -22,12 +22,10 @@ export default function App() {
         setItem('');
     };
 
-    // Function to remove an item from the grocery list
     const handleRemoveItem = (index) => {
         setGroceryList(groceryList.filter((_, i) => i !== index));
     };
 
-    // Function to generate route and communicate with the C++ backend
     const handleGenerateRoute = () => {
         fetch('http://localhost:8080/compute_path')
             .then((response) => {
@@ -46,124 +44,99 @@ export default function App() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>StoreSpeedy</Text>
-            <Text style={styles.subHeader}>Navigate HEB Stores Efficiently</Text>
-            <Text style={styles.label}>Location:</Text>
-            <View style={styles.pickerContainer}>
-                <Picker
-                    selectedValue={location}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setLocation(itemValue)}
-                    mode="dropdown" // Ensures the picker expands only when clicked
-                >
-                    {validLocations.map((loc) => (
-                        <Picker.Item key={loc} label={loc} value={loc} />
-                    ))}
-                </Picker>
-            </View>
-            <InputWithButton
-                label="Enter grocery item..."
-                value={item}
-                onChangeText={setItem}
-                buttonLabel="Add"
-                onPressButton={handleAddItem}
+        <SafeAreaView style={styles.safeArea}>
+            <FlatList
+                ListHeaderComponent={
+                    <>
+                        <Text style={styles.header}>StoreSpeedy</Text>
+                        <Text style={styles.subHeader}>Navigate HEB Stores Efficiently</Text>
+                        <Text style={styles.label}>Location:</Text>
+                        <View style={styles.pickerContainer}>
+                            <Picker
+                                selectedValue={location}
+                                style={styles.picker}
+                                onValueChange={(itemValue) => setLocation(itemValue)}
+                                mode="dropdown"
+                            >
+                                {validLocations.map((loc) => (
+                                    <Picker.Item key={loc} label={loc} value={loc} />
+                                ))}
+                            </Picker>
+                        </View>
+                        <InputWithButton
+                            label="Enter grocery item..."
+                            value={item}
+                            onChangeText={setItem}
+                            buttonLabel="Add"
+                            onPressButton={handleAddItem}
+                        />
+                        <Text style={styles.listHeader}>Grocery List</Text>
+                    </>
+                }
+                data={groceryList}
+                renderItem={({ item, index }) => (
+                    <View style={styles.listItem}>
+                        <Text style={styles.itemText}>{item}</Text>
+                        <TouchableOpacity onPress={() => handleRemoveItem(index)}>
+                            <AntDesign name="delete" size={24} color="red" />
+                        </TouchableOpacity>
+                    </View>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                ListFooterComponent={
+                    <>
+                        <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
+                            <Text style={styles.buttonText}>Generate Route</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.listHeader}>Aisles</Text>
+                        <FlatList
+                            data={aisles}
+                            renderItem={({ item }) => (
+                                <View style={styles.listItem}>
+                                    <Text style={styles.aisleName}>{item.aisleName}</Text>
+                                    {item.items.map((itemName, index) => (
+                                        <Text key={index} style={styles.itemText}>{itemName}</Text>
+                                    ))}
+                                </View>
+                            )}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                        <StatusBar style="auto" />
+                    </>
+                }
             />
-            <GroceryList items={groceryList} onRemoveItem={handleRemoveItem} />
-            <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
-                <Text style={styles.buttonText}>Generate Route</Text>
-            </TouchableOpacity>
-            <AisleList aisles={aisles} />
-            <StatusBar style="auto" />
-        </View>
-    );
-}
-
-// Component for input with a button
-function InputWithButton({ label, value, onChangeText, buttonLabel, onPressButton }) {
-    return (
-        <View style={styles.inputContainer}>
-            <TextInput
-                style={styles.input}
-                onChangeText={onChangeText}
-                value={value}
-                placeholder={label}
-            />
-            <Button
-                title={buttonLabel}
-                onPress={onPressButton}
-                color="#ff0000" // Red color for buttons
-            />
-        </View>
-    );
-}
-
-// Component for displaying and managing the grocery list
-function GroceryList({ items, onRemoveItem }) {
-    return (
-        <FlatList
-            style={styles.list}
-            data={items}
-            renderItem={({ item, index }) => (
-                <View style={styles.listItem}>
-                    <Text style={styles.itemText}>{item}</Text>
-                    <TouchableOpacity onPress={() => onRemoveItem(index)}>
-                        <AntDesign name="delete" size={24} color="red" />
-                    </TouchableOpacity>
-                </View>
-            )}
-            keyExtractor={(_, index) => index.toString()}
-        />
-    );
-}
-
-// Component for displaying the aisles and their items
-function AisleList({ aisles }) {
-    return (
-        <FlatList
-            style={styles.list}
-            data={aisles}
-            renderItem={({ item }) => (
-                <View style={styles.listItem}>
-                    <Text style={styles.aisleName}>{item.aisleName}</Text>
-                    {item.items.map((itemName, index) => (
-                        <Text key={index} style={styles.itemText}>{itemName}</Text>
-                    ))}
-                </View>
-            )}
-            keyExtractor={(_, index) => index.toString()}
-        />
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
-        alignItems: 'center',
-        paddingTop: 60,
-        paddingHorizontal: 20,
-        backgroundColor: '#ffffff', // White background
+        backgroundColor: '#ffffff',
     },
     header: {
         fontSize: 26,
         marginBottom: 10,
         color: '#1d3557',
         fontWeight: 'bold',
+        textAlign: 'center',
     },
     subHeader: {
         fontSize: 18,
         marginBottom: 20,
         color: '#1d3557',
+        textAlign: 'center',
     },
     label: {
         fontSize: 18,
         marginBottom: 10,
         color: '#1d3557',
+        textAlign: 'center',
     },
     pickerContainer: {
         width: '100%',
         marginBottom: 20,
-        borderColor: '#000000', // Black border
+        borderColor: '#000000',
         borderWidth: 1,
         borderRadius: 5,
         overflow: 'hidden',
@@ -171,25 +144,12 @@ const styles = StyleSheet.create({
     picker: {
         width: '100%',
     },
-    inputContainer: {
-        flexDirection: 'row',
-        width: '100%',
-        alignItems: 'center',
-        marginBottom: 10,
-        borderColor: '#000000', // Black border
-        borderWidth: 1,
-        borderRadius: 5,
-    },
-    input: {
-        height: 40,
-        flex: 1,
-        borderWidth: 0, // Remove border from input field
-        padding: 10,
-        backgroundColor: '#ffffff',
-    },
-    list: {
-        width: '100%',
-        marginBottom: 20,
+    listHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#1d3557',
+        marginVertical: 10,
+        textAlign: 'center',
     },
     listItem: {
         flexDirection: 'row',
@@ -198,9 +158,10 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#ffffff',
         borderWidth: 1,
-        borderColor: '#000000', // Black border
+        borderColor: '#000000',
         borderRadius: 5,
         marginBottom: 10,
+        width: '100%',
     },
     itemText: {
         fontSize: 16,
@@ -212,7 +173,7 @@ const styles = StyleSheet.create({
         color: '#1d3557',
     },
     button: {
-        backgroundColor: '#ff0000', // Red background
+        backgroundColor: '#ff0000',
         padding: 15,
         borderRadius: 5,
         marginBottom: 20,

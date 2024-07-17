@@ -1,4 +1,4 @@
 import { registerRootComponent } from 'expo';
-import App from './App';
+import MainTabNavigator from './navigation/MainTabNavigator';
 
-registerRootComponent(App);
+registerRootComponent(MainTabNavigator);
