@@ -4,6 +4,16 @@
 
 using namespace std;
 
+std::stringstream Maze::getNodeData() {
+    std::stringstream ss;
+    for (auto& node : this->Nodes) {
+        ss << node.printNameAndEdges();
+    }
+    ss << "exit\n";
+    return ss;
+}
+
+
 void Maze::fileParser() {
     // Open the file and check to see if it is open
     ifstream file(fileName);

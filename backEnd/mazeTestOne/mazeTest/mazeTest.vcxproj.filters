@@ -32,9 +32,19 @@
     <ClInclude Include="src\NodeFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Path.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StoreGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StoreGraphFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\testMaze.txt" />
     <Text Include="testMaze.txt" />
+    <Text Include="vmstoretext_readable.txt" />
   </ItemGroup>
 </Project>

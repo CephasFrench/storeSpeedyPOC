@@ -22,10 +22,7 @@ public:
         makeNodes();
     }
     
-    // TODO: MAKE THIS PRIVATE
-    list<GraphNode> getNodes() {
-		return Nodes;
-	}
+    stringstream getNodeData();
 
 private:
     std::string fileName;
@@ -38,5 +35,8 @@ private:
     bool isValid(int row, int col);
     int dijkstra(pair<int,int> start, pair<int,int> end);
     void makeNodes();
+    list<GraphNode> getNodes() {
+		return Nodes;
+	}
 
 };

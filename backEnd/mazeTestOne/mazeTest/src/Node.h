@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -23,13 +24,25 @@ public:
 		items.push_back(item);
 	}
 
-    void printNameAndEdges() {
-		cout << "Node: " << name << endl;
-		cout << "Edges: " << endl;
-		for (auto edge : edges) {
-			cout << "    " << edge.first << " " << edge.second << endl;
-		}
-	}
+    std::string printNameAndEdges() {
+        std::stringstream ss;
+
+        // Print name
+        ss << "node " << name << std::endl;
+
+        // Loop through and print the items
+        for (const auto& item : items) {
+            ss << item << std::endl;
+        }
+
+        // Print edges
+        for (const auto& edge : edges) {
+            ss << "aisles " << edge.first << " " << edge.second << std::endl;
+        }
+
+        return ss.str();
+    }
+
 
 private:
     int ID;

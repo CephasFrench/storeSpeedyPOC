@@ -134,10 +134,14 @@
     <ClInclude Include="src\Maze.h" />
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\NodeFactory.h" />
+    <ClInclude Include="src\Path.h" />
+    <ClInclude Include="src\StoreGraph.h" />
+    <ClInclude Include="src\StoreGraphFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\testMaze.txt" />
     <Text Include="testMaze.txt" />
+    <Text Include="vmstoretext_readable.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
