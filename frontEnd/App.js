@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView, FlatList
 import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
 import { AntDesign } from '@expo/vector-icons'; // Import AntDesign
+import * as SecureStore from 'expo-secure-store';
+import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
 
 const validLocations = ["Default", "Valley Mills"];
 
@@ -11,6 +13,7 @@ export default function App() {
     const [item, setItem] = useState('');
     const [groceryList, setGroceryList] = useState([]);
     const [aisles, setAisles] = useState([]);
+    const [isDeveloper, setIsDeveloper] = useState(BOOLEAN_VALUES.DEVELOPER_MODE);
 
     useEffect(() => {
         // Update the server with the new location whenever it changes
@@ -31,6 +34,16 @@ export default function App() {
 
         updateLocation();
     }, [location]);
+
+    useEffect(() => {
+        // Fetch developer mode from secure storage
+        const fetchDeveloperMode = async () => {
+            const storedIsDeveloper = await SecureStore.getItemAsync('isDeveloper');
+            setIsDeveloper(storedIsDeveloper === 'true');
+        };
+
+        fetchDeveloperMode();
+    }, []);
 
     // Function to handle adding an item to the grocery list
     const handleAddItem = () => {
@@ -110,17 +123,20 @@ export default function App() {
                     ))}
                 </Picker>
             </View>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter grocery item..."
-                    value={item}
-                    onChangeText={setItem}
-                />
-                <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
-                    <Text style={styles.addButtonText}>Add</Text>
-                </TouchableOpacity>
-            </View>
+            {BOOLEAN_VALUES.SHOW_ITEM_INPUT && (
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter grocery item..."
+                        value={item}
+                        onChangeText={setItem}
+                        autoCorrect={false}
+                    />
+                    <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
+                        <Text style={styles.addButtonText}>Add</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
             <Text style={styles.listHeader}>Grocery List</Text>
         </>
     );
@@ -153,17 +169,21 @@ export default function App() {
                 renderItem={renderGroceryItem}
                 keyExtractor={(item, index) => index.toString()}
                 ListFooterComponent={
-                    <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
-                        <Text style={styles.buttonText}>Generate Route</Text>
-                    </TouchableOpacity>
+                    BOOLEAN_VALUES.SHOW_GENERATE_ROUTE_BUTTON && (
+                        <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
+                            <Text style={styles.buttonText}>Generate Route</Text>
+                        </TouchableOpacity>
+                    )
                 }
             />
-            <FlatList
-                data={aisles}
-                renderItem={renderAisleItem}
-                keyExtractor={(item, index) => index.toString()}
-                ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
-            />
+            {BOOLEAN_VALUES.SHOW_AISLES && (
+                <FlatList
+                    data={aisles}
+                    renderItem={renderAisleItem}
+                    keyExtractor={(item, index) => index.toString()}
+                    ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
+                />
+            )}
             <StatusBar style="auto" />
         </SafeAreaView>
     );
