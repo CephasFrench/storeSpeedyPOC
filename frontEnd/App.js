@@ -22,7 +22,6 @@ export default function App() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        // Update the server with the new location whenever it changes
         const updateLocation = async () => {
             try {
                 await fetch(`${SERVER_URL}/update_location`, {
@@ -42,7 +41,6 @@ export default function App() {
     }, [location]);
 
     useEffect(() => {
-        // Fetch developer mode from secure storage
         const fetchDeveloperMode = async () => {
             const storedIsDeveloper = await SecureStore.getItemAsync('isDeveloper');
             setIsDeveloper(storedIsDeveloper === 'true');
@@ -51,50 +49,46 @@ export default function App() {
         fetchDeveloperMode();
     }, []);
 
-    useEffect(() => {
-        // Fetch the grocery list when the app loads
-        const fetchGroceryList = async () => {
-            try {
-                const response = await fetch(`${SERVER_URL}/grocery_list/${userId}/${location}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('Fetched grocery list:', data);
-                
-                // Ensure the data is in the correct format
-                if (Array.isArray(data.items)) {
-                    setGroceryList(data.items);
-                } else {
-                    throw new Error('Invalid items data. Expected an array of items.');
-                }
-            } catch (error) {
-                console.error('Error fetching grocery list:', error);
-                setError('Failed to load items. Please try again later.');
-            } finally {
-                setLoading(false);
+    const fetchGroceryList = async () => {
+        try {
+            const response = await fetch(`${SERVER_URL}/grocery_list/${userId}/${location}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        };
+            const data = await response.json();
+            console.log('Fetched grocery list:', data);
 
+            if (data.items && Array.isArray(data.items)) {
+                setGroceryList(data.items);
+            } else if (Array.isArray(data)) {
+                setGroceryList(data);
+            } else {
+                throw new Error('Invalid items data. Expected an array of items.');
+            }
+        } catch (error) {
+            console.error('Error fetching grocery list:', error);
+            setError(`Failed to load items: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchGroceryList();
     }, [location]);
 
-    // Function to handle adding an item to the grocery list
-    // Function to handle adding an item to the grocery list
     const handleAddItem = async () => {
         if (!item.trim()) {
             Alert.alert("Validation", "Please enter an item name.");
             return;
         }
 
-        // Check for duplicates
         if (groceryList.includes(item.trim())) {
             setItem(''); // Clear the text entry box
             Alert.alert("Duplicate Item", "This item is already in your grocery list.");
             return;
         }
 
-        // Check if HEB sells the item before adding to the list
         try {
             const response = await fetch(`${SERVER_URL}/check_item`, {
                 method: 'POST',
@@ -109,55 +103,49 @@ export default function App() {
             }
 
             const data = await response.text(); // Expect plain text "YES" or "NO"
-            console.log('Response from backend:', data); // Log the full response
+            console.log('Response from backend:', data);
 
             if (data === "YES") {
-                setGroceryList((prevList) => [...prevList, item]);
-                setItem('');
+                fetchGroceryList(); // Refresh the grocery list from the server
                 Alert.alert("Item Available", `${item} is available at HEB and added to your list.`);
-            } else {
+            } else if (data === "NO") {
                 Alert.alert("Item Unavailable", `${item} is not available at HEB.`);
-                setItem(''); // Clear the text entry box
+            } else {
+                Alert.alert("Duplicate Item", "This item is already in your grocery list.");
             }
         } catch (error) {
             console.error('Error checking item availability:', error);
-            Alert.alert("Error", "Failed to check item availability.");
+            Alert.alert("Error", `Failed to check item availability: ${error.message}`);
+        } finally {
             setItem(''); // Clear the text entry box
         }
     };
 
-
-    // Function to handle removing an item from the grocery list
-    const handleRemoveItem = (index) => {
+    const handleRemoveItem = async (index) => {
+        const itemToRemove = groceryList[index];
         const updatedGroceryList = groceryList.filter((_, i) => i !== index);
-        setGroceryList(updatedGroceryList);
-        handleUpdateGroceryList(updatedGroceryList);
-    };
 
-    // Function to update grocery list in the backend
-    const handleUpdateGroceryList = (updatedGroceryList) => {
-        const updatedData = { items: updatedGroceryList }; // Update this structure as needed
-        fetch(`${SERVER_URL}/update_grocery_list/${userId}/${location}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedData),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                handleGenerateRoute(); // Update aisles after updating aisle data
-                Alert.alert("Success", "Grocery list updated successfully.");
-            })
-            .catch((error) => {
-                console.error('Error updating data:', error);
-                Alert.alert("Error", "Failed to update grocery list.");
+        try {
+            const response = await fetch(`${SERVER_URL}/update_grocery_list/${userId}/${location}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ items: updatedGroceryList }),
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setGroceryList(updatedGroceryList);
+            Alert.alert("Success", `${itemToRemove} has been removed from your grocery list.`);
+        } catch (error) {
+            console.error('Error removing item:', error);
+            Alert.alert("Error", `Failed to remove item: ${error.message}`);
+        }
     };
 
-    // Function to fetch route from the backend and update the aisles state
     const handleGenerateRoute = () => {
         fetch(`${SERVER_URL}/compute_path`)
             .then((response) => {
@@ -171,11 +159,10 @@ export default function App() {
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
-                Alert.alert("Error", "Failed to fetch data from backend.");
+                Alert.alert("Error", `Failed to fetch data from backend: ${error.message}`);
             });
     };
 
-    // Function to render the header of the FlatList
     const renderHeader = () => (
         <>
             <Text style={styles.header}>StoreSpeedy</Text>
@@ -233,7 +220,12 @@ export default function App() {
                 ListHeaderComponent={renderHeader}
                 data={groceryList}
                 renderItem={({ item, index }) => (
-                    <GroceryList item={item} index={index} onRemoveItem={handleRemoveItem} />
+                    <View style={styles.itemContainer}>
+                        <Text style={styles.itemText}>{item}</Text>
+                        <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveItem(index)}>
+                            <Text style={styles.removeButtonText}>Remove</Text>
+                        </TouchableOpacity>
+                    </View>
                 )}
                 keyExtractor={(item, index) => index.toString()}
                 ListFooterComponent={
@@ -244,16 +236,16 @@ export default function App() {
                     )
                 }
             />
-            {BOOLEAN_VALUES.SHOW_AISLES && (
-                <FlatList
-                    data={aisles}
-                    renderItem={({ item }) => (
-                        <AisleList item={item} />
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                    ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
-                />
-            )}
+            <FlatList
+                data={aisles}
+                renderItem={({ item }) => (
+                    <View style={styles.aisleContainer}>
+                        <Text style={styles.aisleText}>{item}</Text>
+                    </View>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
+            />
             <StatusBar style="auto" />
         </SafeAreaView>
     );
@@ -325,6 +317,37 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         textAlign: 'center',
     },
+    itemContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    itemText: {
+        fontSize: 16,
+        color: '#1d3557',
+    },
+    removeButton: {
+        backgroundColor: '#ff0000',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    removeButtonText: {
+        color: '#fff',
+        fontSize: 14,
+    },
+    aisleContainer: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    aisleText: {
+        fontSize: 16,
+        color: '#1d3557',
+    },
     button: {
         backgroundColor: '#ff0000',
         padding: 15,
@@ -342,3 +365,4 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
 });
+

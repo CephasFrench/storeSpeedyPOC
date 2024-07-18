@@ -11,3 +11,5 @@ Please analyze the image of the Valley Mills Waco store layout and provide a JSO
  neighboring aisles. Ensure to include any debugging messages that may help understand the processing steps.
 
 Red Barron Frozen Pizza
+
+Fix api returned json parsing, also fix displaying of server storage json file with items.

@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <stdexcept>
 #include <string>
-#include <iostream>
+#include <iostream> 
 
 std::string currentLocation = "DefaultLoc";  // Server-side variable to track the chosen location
 const std::string storagePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/server/storage/";
@@ -28,7 +28,7 @@ int main() {
 void ensureDirectoryExists(const std::string& dir) {
     std::ifstream file(dir.c_str());
     if (!file) {
-        std::system(("mkdir -p " + dir).c_str());
+        std::system(("mkdir -p " + dir).c_str()); //Make a directory if it doesnt already exist
     }
 }
 
@@ -60,15 +60,30 @@ void validateGroceryListJson(const Json::Value& jsonData) {
     }
 }
 
-// Function to add an item to the grocery list
 void addItemToGroceryList(const std::string& userId, const std::string& location, const std::string& item) {
     std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
-    Json::Value defaultGroceryList = Json::objectValue;
-    defaultGroceryList["items"] = Json::arrayValue;
-    Json::Value groceryList = readJsonData(filePath, defaultGroceryList);
+    std::ifstream file(filePath, std::ifstream::binary);
+    Json::Value root;
 
-    groceryList["items"].append(item);
-    StoreSpeedyJsonHandler::writeJsonFile(filePath, groceryList);
+    if (file.is_open()) {
+        file >> root;
+        file.close();
+    } else {
+        root["items"] = Json::arrayValue;
+    }
+
+    // Check for duplicates
+    for (const auto& existingItem : root["items"]) {
+        if (existingItem.asString() == item) {
+            return; // Item already exists, do nothing
+        }
+    }
+
+    root["items"].append(item);
+
+    std::ofstream outFile(filePath, std::ofstream::binary);
+    outFile << root;
+    outFile.close();
 }
 
 // Define routes and their handlers
@@ -139,15 +154,39 @@ void defineRoutes(crow::SimpleApp& app) {
     ([](const std::string& userId, const std::string& location) {
         std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
         try {
-            Json::Value defaultGroceryList = Json::objectValue;
-            defaultGroceryList["items"] = Json::arrayValue;
-            Json::Value jsonData = readJsonData(filePath, defaultGroceryList);
-            validateGroceryListJson(jsonData);
-            return crow::response{jsonData.toStyledString()};
+            std::ifstream file(filePath, std::ifstream::binary);
+            if (!file.is_open()) {
+                // If the file doesn't exist, create it with an empty grocery list
+                Json::Value root;
+                root["items"] = Json::arrayValue;
+                std::ofstream outFile(filePath, std::ofstream::binary);
+                outFile << root.toStyledString();
+                outFile.close();
+                
+                // Re-open the newly created file
+                file.open(filePath, std::ifstream::binary);
+                if (!file.is_open()) {
+                    return crow::response(500, "Failed to create and open the grocery list file.");
+                }
+            }
+            
+            Json::Value root;
+            file >> root;
+            file.close();
+
+            if (!root.isMember("items") || !root["items"].isArray()) {
+                return crow::response(400, "Invalid JSON structure: 'items' key missing or not an array.");
+            }
+
+            Json::Value response;
+            response["items"] = root["items"];
+            return crow::response(response.toStyledString());
         } catch (const std::exception& e) {
             return handleError(e);
         }
     });
+
+
 
     // Update user's grocery list endpoint
     CROW_ROUTE(app, "/update_grocery_list/<string>/<string>").methods("POST"_method)
@@ -183,10 +222,9 @@ void defineRoutes(crow::SimpleApp& app) {
             return crow::response(400, "Missing 'item' field");
         }
         std::string item = jsonBody["item"].asString();
+        std::cout << std::endl << "ITEM IS: " << item << std::endl;
         std::string response = callGeminiApiWithItem(item);
-
-        // Log the response received from the API
-        std::cout << "Gemini API response: " << response << std::endl;
+        std::cout << std::endl << "RESPONSE IS: " << response << std::endl;
 
         // Parse the response to check if the item is available
         Json::CharReaderBuilder readerBuilder;
@@ -223,7 +261,9 @@ void defineRoutes(crow::SimpleApp& app) {
                                         std::string nestedText = nestedContent[0]["text"].asString();
                                         std::cout << "Parsed nested text: " << nestedText << std::endl;
                                         if (nestedText == "YES") {
+                                            std::cout << "adding YES item to grocery list..." << std::endl;
                                             addItemToGroceryList("default", currentLocation, item); // Add item to the grocery list
+                                            std::cout << "should have added item. " << std::endl;
                                             return crow::response("YES");
                                         } else {
                                             return crow::response("NO");
@@ -240,6 +280,5 @@ void defineRoutes(crow::SimpleApp& app) {
         std::cerr << "Failed to parse Gemini API response: " << parseErrors << std::endl;
         return crow::response(400, "Failed to parse response.");
     });
-
 
 }
