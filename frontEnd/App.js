@@ -80,16 +80,52 @@ export default function App() {
     }, [location]);
 
     // Function to handle adding an item to the grocery list
-    const handleAddItem = () => {
+    // Function to handle adding an item to the grocery list
+    const handleAddItem = async () => {
         if (!item.trim()) {
             Alert.alert("Validation", "Please enter an item name.");
             return;
         }
-        const updatedGroceryList = [...groceryList, item];
-        setGroceryList(updatedGroceryList);
-        setItem('');
-        handleUpdateGroceryList(updatedGroceryList);
+
+        // Check for duplicates
+        if (groceryList.includes(item.trim())) {
+            setItem(''); // Clear the text entry box
+            Alert.alert("Duplicate Item", "This item is already in your grocery list.");
+            return;
+        }
+
+        // Check if HEB sells the item before adding to the list
+        try {
+            const response = await fetch(`${SERVER_URL}/check_item`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ item }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.text(); // Expect plain text "YES" or "NO"
+            console.log('Response from backend:', data); // Log the full response
+
+            if (data === "YES") {
+                setGroceryList((prevList) => [...prevList, item]);
+                setItem('');
+                Alert.alert("Item Available", `${item} is available at HEB and added to your list.`);
+            } else {
+                Alert.alert("Item Unavailable", `${item} is not available at HEB.`);
+                setItem(''); // Clear the text entry box
+            }
+        } catch (error) {
+            console.error('Error checking item availability:', error);
+            Alert.alert("Error", "Failed to check item availability.");
+            setItem(''); // Clear the text entry box
+        }
     };
+
 
     // Function to handle removing an item from the grocery list
     const handleRemoveItem = (index) => {

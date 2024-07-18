@@ -1,8 +1,11 @@
 #include "crow_all.h"
 #include "StoreSpeedyJsonHandler.h"
+#include "api_util.h"
 #include <fstream>
 #include <filesystem>
 #include <stdexcept>
+#include <string>
+#include <iostream>
 
 std::string currentLocation = "DefaultLoc";  // Server-side variable to track the chosen location
 const std::string storagePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/server/storage/";
@@ -13,6 +16,7 @@ void ensureFileExists(const std::string& filePath, const Json::Value& defaultVal
 crow::response handleError(const std::exception& e);
 Json::Value readJsonData(const std::string& filePath, const Json::Value& defaultValue);
 void validateGroceryListJson(const Json::Value& jsonData);
+void addItemToGroceryList(const std::string& userId, const std::string& location, const std::string& item);
 
 int main() {
     crow::SimpleApp app;  // Create a Crow application
@@ -54,6 +58,17 @@ void validateGroceryListJson(const Json::Value& jsonData) {
     if (!jsonData.isMember("items") || !jsonData["items"].isArray()) {
         throw std::runtime_error("Invalid JSON structure: 'items' key missing or not an array.");
     }
+}
+
+// Function to add an item to the grocery list
+void addItemToGroceryList(const std::string& userId, const std::string& location, const std::string& item) {
+    std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
+    Json::Value defaultGroceryList = Json::objectValue;
+    defaultGroceryList["items"] = Json::arrayValue;
+    Json::Value groceryList = readJsonData(filePath, defaultGroceryList);
+
+    groceryList["items"].append(item);
+    StoreSpeedyJsonHandler::writeJsonFile(filePath, groceryList);
 }
 
 // Define routes and their handlers
@@ -155,17 +170,76 @@ void defineRoutes(crow::SimpleApp& app) {
     });
 
     // Test endpoint for validating grocery list
-    CROW_ROUTE(app, "/test_grocery_list/<string>/<string>").methods("GET"_method)
-    ([](const std::string& userId, const std::string& location) {
-        std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
-        try {
-            Json::Value defaultGroceryList = Json::objectValue;
-            defaultGroceryList["items"] = Json::arrayValue;
-            Json::Value jsonData = readJsonData(filePath, defaultGroceryList);
-            validateGroceryListJson(jsonData);
-            return crow::response(200, "Grocery list JSON is valid.");
-        } catch (const std::exception& e) {
-            return handleError(e);
+    CROW_ROUTE(app, "/check_item").methods("POST"_method)
+    ([](const crow::request& req) {
+        Json::Value jsonBody;
+        Json::CharReaderBuilder rbuilder;
+        std::string errs;
+        std::istringstream iss(req.body);
+        if (!Json::parseFromStream(rbuilder, iss, &jsonBody, &errs)) {
+            return crow::response(400, "Invalid JSON");
         }
+        if (!jsonBody.isMember("item")) {
+            return crow::response(400, "Missing 'item' field");
+        }
+        std::string item = jsonBody["item"].asString();
+        std::string response = callGeminiApiWithItem(item);
+
+        // Log the response received from the API
+        std::cout << "Gemini API response: " << response << std::endl;
+
+        // Parse the response to check if the item is available
+        Json::CharReaderBuilder readerBuilder;
+        Json::Value jsonResponse;
+        std::string parseErrors;
+        std::istringstream responseStream(response);
+        if (Json::parseFromStream(readerBuilder, responseStream, &jsonResponse, &parseErrors)) {
+            if (jsonResponse.isObject() && jsonResponse.isMember("candidates")) {
+                const Json::Value& candidates = jsonResponse["candidates"];
+                if (candidates.isArray() && !candidates.empty()) {
+                    const Json::Value& content = candidates[0]["content"]["parts"];
+                    if (content.isArray() && !content.empty()) {
+                        std::string text = content[0]["text"].asString();
+
+                        // Remove backticks and "json" keyword
+                        size_t firstBacktick = text.find("```json\n");
+                        if (firstBacktick != std::string::npos) {
+                            text.erase(firstBacktick, 7); // Remove "```json\n"
+                        }
+                        size_t lastBacktick = text.rfind("\n```");
+                        if (lastBacktick != std::string::npos) {
+                            text.erase(lastBacktick, 4); // Remove "\n```"
+                        }
+
+                        // Parse the cleaned JSON text
+                        Json::Value nestedJson;
+                        std::istringstream nestedStream(text);
+                        if (Json::parseFromStream(readerBuilder, nestedStream, &nestedJson, &parseErrors)) {
+                            if (nestedJson.isObject() && nestedJson.isMember("candidates")) {
+                                const Json::Value& nestedCandidates = nestedJson["candidates"];
+                                if (nestedCandidates.isArray() && !nestedCandidates.empty()) {
+                                    const Json::Value& nestedContent = nestedCandidates[0]["content"]["parts"];
+                                    if (nestedContent.isArray() && !nestedContent.empty()) {
+                                        std::string nestedText = nestedContent[0]["text"].asString();
+                                        std::cout << "Parsed nested text: " << nestedText << std::endl;
+                                        if (nestedText == "YES") {
+                                            addItemToGroceryList("default", currentLocation, item); // Add item to the grocery list
+                                            return crow::response("YES");
+                                        } else {
+                                            return crow::response("NO");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        std::cerr << "Failed to parse Gemini API response: " << parseErrors << std::endl;
+        return crow::response(400, "Failed to parse response.");
     });
+
+
 }

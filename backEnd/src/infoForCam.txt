@@ -10,3 +10,4 @@ Valley Mills neighbor info:
 Please analyze the image of the Valley Mills Waco store layout and provide a JSON object that lists all the aisles and their
  neighboring aisles. Ensure to include any debugging messages that may help understand the processing steps.
 
+Red Barron Frozen Pizza

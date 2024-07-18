@@ -1,9 +1,5 @@
 #include "api_util.h"
-#include <iostream>
-#include <sstream>
-#include <curl/curl.h>
-#include <json/json.h>
-#include <vector>
+#include <string>
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
 {
@@ -30,7 +26,7 @@ std::string performPostRequest(const std::string& url, struct curl_slist* header
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
         } else {
             std::cout << "API successfully called with the prompt." << std::endl;
-            std::cout << "Response received: " << readBuffer << std::endl; // Print the raw response
+            //std::cout << "Response received: " << readBuffer << std::endl;
         }
 
         curl_easy_cleanup(curl);
@@ -39,6 +35,45 @@ std::string performPostRequest(const std::string& url, struct curl_slist* header
     }
 
     return readBuffer;
+}
+
+std::string callGeminiApiWithItem(const std::string& item) {
+
+    //std::string item = "walmart only items"; //testing
+    const std::string url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag";
+    std::string promptText = "Please respond to this prompt with a JSON object in the following format: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"YES\"}]}}]}. The text should be 'YES' if HEB sells " + item + ", otherwise 'NO' and nothing else.";
+
+    // Use Json::Value to construct the JSON data
+    Json::Value root;
+    Json::Value content;
+    Json::Value parts;
+    Json::Value text;
+
+    text["text"] = promptText;
+    parts.append(text);
+    content["parts"] = parts;
+    root["contents"].append(content);
+
+    // Convert Json::Value to string
+    Json::StreamWriterBuilder writer;
+    std::string jsonData = Json::writeString(writer, root);
+
+    struct curl_slist* headers = nullptr;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+
+    std::cout << "Performing post request to gemini with item..." << std::endl;
+    std::string response = performPostRequest(url, headers, jsonData);
+
+    if (!response.empty()) {
+        //std::cout << "Response received: " << response << std::endl;
+    } else {
+        std::cerr << "No response received from the API." << std::endl;
+    }
+
+
+    curl_slist_free_all(headers);
+
+    return response;
 }
 
 void handleErrorResponse(const std::string& response)
@@ -140,7 +175,7 @@ void parseAndDisplayJson(const std::string& response)
             }
         } else {
             std::cerr << "Failed to parse JSON response: " << errors << std::endl;
-            std::cerr << "Response received: " << response << std::endl;
+            //std::cerr << "Response received: " << response << std::endl;
         }
     }
 }
