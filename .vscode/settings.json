@@ -88,7 +88,9 @@
         "memory_resource": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "exception": "cpp",
+        "system_error": "cpp"
     },
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**",

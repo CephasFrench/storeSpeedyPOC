@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/storeSpeedyPOC.dir/StoreSpeedyJsonHandler.cpp.o"
+  "CMakeFiles/storeSpeedyPOC.dir/StoreSpeedyJsonHandler.cpp.o.d"
   "CMakeFiles/storeSpeedyPOC.dir/aisles/Aisle.cpp.o"
   "CMakeFiles/storeSpeedyPOC.dir/aisles/Aisle.cpp.o.d"
   "CMakeFiles/storeSpeedyPOC.dir/api/api_util.cpp.o"

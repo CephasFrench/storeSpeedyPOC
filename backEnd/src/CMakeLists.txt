@@ -46,6 +46,7 @@ set(SOURCE_FILES
     ${API_DIR}/api_util.cpp
     ${CART_DIR}/Cart.cpp
     ${ITEMS_DIR}/Item.cpp
+    ${SRC_DIR}/StoreSpeedyJsonHandler.cpp
 )
 
 # Add an executable target named 'storeSpeedyPOC' built from multiple source files

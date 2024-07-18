@@ -129,6 +129,30 @@ storeSpeedyPOC/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/storeSpeedyPOC.dir/build.make CMakeFiles/storeSpeedyPOC.dir/build
 .PHONY : storeSpeedyPOC/fast
 
+StoreSpeedyJsonHandler.o: StoreSpeedyJsonHandler.cpp.o
+.PHONY : StoreSpeedyJsonHandler.o
+
+# target to build an object file
+StoreSpeedyJsonHandler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/storeSpeedyPOC.dir/build.make CMakeFiles/storeSpeedyPOC.dir/StoreSpeedyJsonHandler.cpp.o
+.PHONY : StoreSpeedyJsonHandler.cpp.o
+
+StoreSpeedyJsonHandler.i: StoreSpeedyJsonHandler.cpp.i
+.PHONY : StoreSpeedyJsonHandler.i
+
+# target to preprocess a source file
+StoreSpeedyJsonHandler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/storeSpeedyPOC.dir/build.make CMakeFiles/storeSpeedyPOC.dir/StoreSpeedyJsonHandler.cpp.i
+.PHONY : StoreSpeedyJsonHandler.cpp.i
+
+StoreSpeedyJsonHandler.s: StoreSpeedyJsonHandler.cpp.s
+.PHONY : StoreSpeedyJsonHandler.s
+
+# target to generate assembly for a file
+StoreSpeedyJsonHandler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/storeSpeedyPOC.dir/build.make CMakeFiles/storeSpeedyPOC.dir/StoreSpeedyJsonHandler.cpp.s
+.PHONY : StoreSpeedyJsonHandler.cpp.s
+
 aisles/Aisle.o: aisles/Aisle.cpp.o
 .PHONY : aisles/Aisle.o
 
@@ -258,6 +282,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... storeSpeedyPOC"
+	@echo "... StoreSpeedyJsonHandler.o"
+	@echo "... StoreSpeedyJsonHandler.i"
+	@echo "... StoreSpeedyJsonHandler.s"
 	@echo "... aisles/Aisle.o"
 	@echo "... aisles/Aisle.i"
 	@echo "... aisles/Aisle.s"

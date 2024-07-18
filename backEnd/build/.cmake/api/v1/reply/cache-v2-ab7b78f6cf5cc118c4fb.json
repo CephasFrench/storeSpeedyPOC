@@ -107,7 +107,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "29"
+			"value" : "30"
 		},
 		{
 			"name" : "CMAKE_CACHE_PATCH_VERSION",
@@ -119,7 +119,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "5"
+			"value" : "0"
 		},
 		{
 			"name" : "CMAKE_COMMAND",
@@ -131,7 +131,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/cmake/3.29.5/bin/cmake"
+			"value" : "/opt/homebrew/Cellar/cmake/3.30.0/bin/cmake"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -143,7 +143,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/cmake/3.29.5/bin/cpack"
+			"value" : "/opt/homebrew/Cellar/cmake/3.30.0/bin/cpack"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -155,7 +155,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/cmake/3.29.5/bin/ctest"
+			"value" : "/opt/homebrew/Cellar/cmake/3.30.0/bin/ctest"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER",
@@ -955,7 +955,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/cmake/3.29.5/share/cmake"
+			"value" : "/opt/homebrew/Cellar/cmake/3.30.0/share/cmake"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1307,7 +1307,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "[/opt/homebrew/Cellar/opencv/4.9.0_12][v4.9.0()]"
+			"value" : "[/opt/homebrew/Cellar/opencv/4.10.0][v4.10.0()]"
 		},
 		{
 			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig",
