@@ -1,84 +1,171 @@
-#include "crow_all.h"  // Include Crow library for building the web server
-#include <json/json.h> // Include JsonCpp library for JSON handling
-#include <fstream>     // Include fstream for file operations
-#include <iostream>    // Include iostream for standard input-output stream
-#include <string>      // Include string for using string class
+#include "crow_all.h"
+#include "StoreSpeedyJsonHandler.h"
+#include <fstream>
+#include <filesystem>
+#include <stdexcept>
 
-std::string currentLocation = "Default";  // Server-side variable to track the chosen location
+std::string currentLocation = "DefaultLoc";  // Server-side variable to track the chosen location
+const std::string storagePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/server/storage/";
 
-// Function to read the content of a JSON file and return it as a string
-std::string readJsonFile(const std::string& filePath) {
-    std::ifstream file(filePath);  // Open the file at the given file path
-    if (!file.is_open()) {  // Check if the file is open, if not, throw an error
-        throw std::runtime_error("Could not open file: " + filePath);
-    }
-
-    // Read the content of the file into a string
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    return content;  // Return the content of the file
-}
-
-// Function to write the content to a JSON file
-void writeJsonFile(const std::string& filePath, const std::string& content) {
-    std::ofstream file(filePath);  // Open the file at the given file path
-    if (!file.is_open()) {  // Check if the file is open, if not, throw an error
-        throw std::runtime_error("Could not open file: " + filePath);
-    }
-    file << content;  // Write the content to the file
-}
+void defineRoutes(crow::SimpleApp& app);
+void ensureDirectoryExists(const std::string& dir);
+void ensureFileExists(const std::string& filePath, const Json::Value& defaultValue);
+crow::response handleError(const std::exception& e);
+Json::Value readJsonData(const std::string& filePath, const Json::Value& defaultValue);
+void validateGroceryListJson(const Json::Value& jsonData);
 
 int main() {
     crow::SimpleApp app;  // Create a Crow application
+    defineRoutes(app);
+    app.port(8080).multithreaded().run();  // Run the Crow application on port 8080 with multithreading enabled
+}
 
-    // Define a route for the endpoint "/compute_path" with GET method
+// Function to ensure directory exists
+void ensureDirectoryExists(const std::string& dir) {
+    std::ifstream file(dir.c_str());
+    if (!file) {
+        std::system(("mkdir -p " + dir).c_str());
+    }
+}
+
+// Ensure file exists and create with default value if not
+void ensureFileExists(const std::string& filePath, const Json::Value& defaultValue) {
+    std::ifstream file(filePath);
+    if (!file.good()) {
+        std::ofstream outFile(filePath);
+        outFile << defaultValue.toStyledString();
+        outFile.close();
+    }
+}
+
+// Handle errors and create a response
+crow::response handleError(const std::exception& e) {
+    return crow::response(500, e.what());
+}
+
+// Read JSON data from a file
+Json::Value readJsonData(const std::string& filePath, const Json::Value& defaultValue) {
+    ensureFileExists(filePath, defaultValue);
+    return StoreSpeedyJsonHandler::readJsonFile(filePath);
+}
+
+// Validate JSON structure for grocery list
+void validateGroceryListJson(const Json::Value& jsonData) {
+    if (!jsonData.isMember("items") || !jsonData["items"].isArray()) {
+        throw std::runtime_error("Invalid JSON structure: 'items' key missing or not an array.");
+    }
+}
+
+// Define routes and their handlers
+void defineRoutes(crow::SimpleApp& app) {
+    // Compute path endpoint
     CROW_ROUTE(app, "/compute_path").methods("GET"_method)
     ([]() {
-        std::string filePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/aisle_data.json";  // File path to the JSON data
+        std::string filePath = storagePath + "locations/" + currentLocation + "/aisles/aisle_data.json";
         try {
-            // Read JSON data from the file
-            std::string jsonData = readJsonFile(filePath);
-            return crow::response{jsonData};  // Return the JSON data as the response
+            Json::Value jsonData = readJsonData(filePath, Json::Value(Json::objectValue));
+            return crow::response{jsonData.toStyledString()};
         } catch (const std::exception& e) {
-            // If an error occurs, return a 500 response with the error message
-            return crow::response(500, e.what());
+            return handleError(e);
         }
     });
 
-    // Endpoint to update aisle data with POST method
+    // Update aisle data endpoint
     CROW_ROUTE(app, "/update_aisle_data").methods("POST"_method)
     ([](const crow::request& req) {
-        std::string filePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/aisle_data.json";  // File path to the JSON data
+        std::string filePath = storagePath + "locations/" + currentLocation + "/aisles/aisle_data.json";
         try {
-            // Write the received JSON data to the file
-            writeJsonFile(filePath, req.body);
+            Json::Value jsonData;
+            std::istringstream iss(req.body);
+            Json::CharReaderBuilder rbuilder;
+            std::string errs;
+            if (!Json::parseFromStream(rbuilder, iss, &jsonData, &errs)) {
+                return crow::response(400, "Invalid JSON");
+            }
+            if (!StoreSpeedyJsonHandler::validateAisleDataJson(jsonData)) {
+                return crow::response(400, "Invalid JSON structure for aisle data");
+            }
+            StoreSpeedyJsonHandler::writeJsonFile(filePath, jsonData);
             return crow::response(200);
         } catch (const std::exception& e) {
-            // If an error occurs, return a 500 response with the error message
-            return crow::response(500, e.what());
+            return handleError(e);
         }
     });
 
-    // Endpoint to handle server ping
+    // Ping endpoint
     CROW_ROUTE(app, "/ping").methods("GET"_method)
     ([]() {
         return crow::response(200, "Pong");
     });
 
-    // Endpoint to update the current location
+    // Update location endpoint
     CROW_ROUTE(app, "/update_location").methods("POST"_method)
     ([](const crow::request& req) {
         try {
-            auto jsonBody = crow::json::load(req.body);
-            if (!jsonBody) {
+            Json::Value jsonBody;
+            std::istringstream iss(req.body);
+            Json::CharReaderBuilder rbuilder;
+            std::string errs;
+            if (!Json::parseFromStream(rbuilder, iss, &jsonBody, &errs)) {
                 return crow::response(400, "Invalid JSON");
             }
-            currentLocation = jsonBody["location"].s();
+            if (!jsonBody.isMember("location")) {
+                return crow::response(400, "Invalid JSON");
+            }
+            currentLocation = jsonBody["location"].asString();
             return crow::response(200);
         } catch (const std::exception& e) {
-            return crow::response(500, e.what());
+            return handleError(e);
         }
     });
 
-    // Run the Crow application on port 8080 with multithreading enabled
-    app.port(8080).multithreaded().run();
+    // Get user's grocery list endpoint
+    CROW_ROUTE(app, "/grocery_list/<string>/<string>").methods("GET"_method)
+    ([](const std::string& userId, const std::string& location) {
+        std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
+        try {
+            Json::Value defaultGroceryList = Json::objectValue;
+            defaultGroceryList["items"] = Json::arrayValue;
+            Json::Value jsonData = readJsonData(filePath, defaultGroceryList);
+            validateGroceryListJson(jsonData);
+            return crow::response{jsonData.toStyledString()};
+        } catch (const std::exception& e) {
+            return handleError(e);
+        }
+    });
+
+    // Update user's grocery list endpoint
+    CROW_ROUTE(app, "/update_grocery_list/<string>/<string>").methods("POST"_method)
+    ([](const crow::request& req, const std::string& userId, const std::string& location) {
+        std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
+        try {
+            Json::Value jsonData;
+            std::istringstream iss(req.body);
+            Json::CharReaderBuilder rbuilder;
+            std::string errs;
+            if (!Json::parseFromStream(rbuilder, iss, &jsonData, &errs)) {
+                return crow::response(400, "Invalid JSON");
+            }
+            validateGroceryListJson(jsonData);
+            StoreSpeedyJsonHandler::writeJsonFile(filePath, jsonData);
+            return crow::response(200);
+        } catch (const std::exception& e) {
+            return handleError(e);
+        }
+    });
+
+    // Test endpoint for validating grocery list
+    CROW_ROUTE(app, "/test_grocery_list/<string>/<string>").methods("GET"_method)
+    ([](const std::string& userId, const std::string& location) {
+        std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
+        try {
+            Json::Value defaultGroceryList = Json::objectValue;
+            defaultGroceryList["items"] = Json::arrayValue;
+            Json::Value jsonData = readJsonData(filePath, defaultGroceryList);
+            validateGroceryListJson(jsonData);
+            return crow::response(200, "Grocery list JSON is valid.");
+        } catch (const std::exception& e) {
+            return handleError(e);
+        }
+    });
 }

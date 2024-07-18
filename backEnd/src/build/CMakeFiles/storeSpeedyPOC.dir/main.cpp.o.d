@@ -2097,6 +2097,7 @@ CMakeFiles/storeSpeedyPOC.dir/main.cpp.o: \
   /opt/homebrew/include/boost/date_time/filetime_functions.hpp \
   /opt/homebrew/include/boost/date_time/posix_time/time_parsers.hpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/condition_variable \
+  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/StoreSpeedyJsonHandler.h \
   /opt/homebrew/include/json/json.h /opt/homebrew/include/json/config.h \
   /opt/homebrew/include/json/allocator.h \
   /opt/homebrew/include/json/version.h \

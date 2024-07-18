@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView, FlatList, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
-import { AntDesign } from '@expo/vector-icons'; // Import AntDesign
 import * as SecureStore from 'expo-secure-store';
 import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
+import InputWithButton from './components/InputWithButton';
+import GroceryList from './components/GroceryList';
+import AisleList from './components/AisleList';
 
 const validLocations = ["Default", "Valley Mills"];
+const userId = 'default'; // default user ID
+const SERVER_URL = "http://localhost:8080"; // Replace localhost when applicable
 
 export default function App() {
     const [location, setLocation] = useState('Default');
@@ -14,12 +18,14 @@ export default function App() {
     const [groceryList, setGroceryList] = useState([]);
     const [aisles, setAisles] = useState([]);
     const [isDeveloper, setIsDeveloper] = useState(BOOLEAN_VALUES.DEVELOPER_MODE);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         // Update the server with the new location whenever it changes
         const updateLocation = async () => {
             try {
-                await fetch('http://localhost:8080/update_location', {
+                await fetch(`${SERVER_URL}/update_location`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -45,6 +51,34 @@ export default function App() {
         fetchDeveloperMode();
     }, []);
 
+    useEffect(() => {
+        // Fetch the grocery list when the app loads
+        const fetchGroceryList = async () => {
+            try {
+                const response = await fetch(`${SERVER_URL}/grocery_list/${userId}/${location}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Fetched grocery list:', data);
+                
+                // Ensure the data is in the correct format
+                if (Array.isArray(data.items)) {
+                    setGroceryList(data.items);
+                } else {
+                    throw new Error('Invalid items data. Expected an array of items.');
+                }
+            } catch (error) {
+                console.error('Error fetching grocery list:', error);
+                setError('Failed to load items. Please try again later.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchGroceryList();
+    }, [location]);
+
     // Function to handle adding an item to the grocery list
     const handleAddItem = () => {
         if (!item.trim()) {
@@ -54,19 +88,42 @@ export default function App() {
         const updatedGroceryList = [...groceryList, item];
         setGroceryList(updatedGroceryList);
         setItem('');
-        handleUpdateAisleData(updatedGroceryList);
+        handleUpdateGroceryList(updatedGroceryList);
     };
 
     // Function to handle removing an item from the grocery list
     const handleRemoveItem = (index) => {
         const updatedGroceryList = groceryList.filter((_, i) => i !== index);
         setGroceryList(updatedGroceryList);
-        handleUpdateAisleData(updatedGroceryList);
+        handleUpdateGroceryList(updatedGroceryList);
+    };
+
+    // Function to update grocery list in the backend
+    const handleUpdateGroceryList = (updatedGroceryList) => {
+        const updatedData = { items: updatedGroceryList }; // Update this structure as needed
+        fetch(`${SERVER_URL}/update_grocery_list/${userId}/${location}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                handleGenerateRoute(); // Update aisles after updating aisle data
+                Alert.alert("Success", "Grocery list updated successfully.");
+            })
+            .catch((error) => {
+                console.error('Error updating data:', error);
+                Alert.alert("Error", "Failed to update grocery list.");
+            });
     };
 
     // Function to fetch route from the backend and update the aisles state
     const handleGenerateRoute = () => {
-        fetch('http://localhost:8080/compute_path')
+        fetch(`${SERVER_URL}/compute_path`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -79,29 +136,6 @@ export default function App() {
             .catch((error) => {
                 console.error('Error fetching data:', error);
                 Alert.alert("Error", "Failed to fetch data from backend.");
-            });
-    };
-
-    // Function to update aisle data from the frontend to the backend
-    const handleUpdateAisleData = (updatedGroceryList) => {
-        const updatedData = { items: updatedGroceryList }; // Update this structure as needed
-        fetch('http://localhost:8080/update_aisle_data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedData),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                handleGenerateRoute(); // Update aisles after updating aisle data
-                Alert.alert("Success", "Aisle data updated successfully.");
-            })
-            .catch((error) => {
-                console.error('Error updating data:', error);
-                Alert.alert("Error", "Failed to update aisle data.");
             });
     };
 
@@ -130,7 +164,7 @@ export default function App() {
                         placeholder="Enter grocery item..."
                         value={item}
                         onChangeText={setItem}
-                        autoCorrect={false}
+                        onSubmitEditing={handleAddItem}
                     />
                     <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
                         <Text style={styles.addButtonText}>Add</Text>
@@ -141,32 +175,30 @@ export default function App() {
         </>
     );
 
-    // Function to render grocery list items
-    const renderGroceryItem = ({ item, index }) => (
-        <View style={styles.listItem}>
-            <Text style={styles.itemText}>{item}</Text>
-            <TouchableOpacity onPress={() => handleRemoveItem(index)}>
-                <AntDesign name="delete" size={24} color="red" />
-            </TouchableOpacity>
-        </View>
-    );
+    if (loading) {
+        return (
+            <SafeAreaView style={styles.safeArea}>
+                <Text>Loading...</Text>
+            </SafeAreaView>
+        );
+    }
 
-    // Function to render aisle items
-    const renderAisleItem = ({ item }) => (
-        <View style={styles.listItem}>
-            <Text style={styles.aisleName}>{item.aisleName}</Text>
-            {item.items.map((itemName, index) => (
-                <Text key={index} style={styles.itemText}>{itemName}</Text>
-            ))}
-        </View>
-    );
+    if (error) {
+        return (
+            <SafeAreaView style={styles.safeArea}>
+                <Text style={styles.errorText}>{error}</Text>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.safeArea}>
             <FlatList
                 ListHeaderComponent={renderHeader}
                 data={groceryList}
-                renderItem={renderGroceryItem}
+                renderItem={({ item, index }) => (
+                    <GroceryList item={item} index={index} onRemoveItem={handleRemoveItem} />
+                )}
                 keyExtractor={(item, index) => index.toString()}
                 ListFooterComponent={
                     BOOLEAN_VALUES.SHOW_GENERATE_ROUTE_BUTTON && (
@@ -179,7 +211,9 @@ export default function App() {
             {BOOLEAN_VALUES.SHOW_AISLES && (
                 <FlatList
                     data={aisles}
-                    renderItem={renderAisleItem}
+                    renderItem={({ item }) => (
+                        <AisleList item={item} />
+                    )}
                     keyExtractor={(item, index) => index.toString()}
                     ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
                 />
@@ -228,22 +262,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
+        marginHorizontal: 20,
     },
     input: {
         flex: 1,
-        borderColor: '#000',
+        borderColor: '#1d3557',
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
-        marginRight: 10,
     },
     addButton: {
-        backgroundColor: '#ff0000',
-        padding: 10,
+        marginLeft: 10,
+        backgroundColor: '#1d3557',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         borderRadius: 5,
     },
     addButtonText: {
-        color: '#ffffff',
+        color: '#fff',
         fontSize: 16,
     },
     listHeader: {
@@ -252,27 +288,6 @@ const styles = StyleSheet.create({
         color: '#1d3557',
         marginVertical: 10,
         textAlign: 'center',
-    },
-    listItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#ffffff',
-        borderWidth: 1,
-        borderColor: '#000000',
-        borderRadius: 5,
-        marginBottom: 10,
-        width: '100%',
-    },
-    itemText: {
-        fontSize: 16,
-        color: '#343a40',
-    },
-    aisleName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#1d3557',
     },
     button: {
         backgroundColor: '#ff0000',
@@ -284,5 +299,10 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#ffffff',
         fontSize: 16,
+    },
+    errorText: {
+        color: 'red',
+        textAlign: 'center',
+        marginTop: 20,
     },
 });
