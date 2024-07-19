@@ -10,7 +10,7 @@
 #include <chrono>
 
 std::string currentLocation = "DefaultLoc";  // Server-side variable to track the chosen location
-const std::string storagePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/server/storage/";
+const std::string storagePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/server/storage/";
 
 const int COMPUTE_PATH_MAX_RETRIES = 1;
 const int COMPUTE_PATH_TIMEOUT_DURATION = 15000;

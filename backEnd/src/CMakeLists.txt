@@ -13,7 +13,7 @@ set(AISLES_DIR ${SRC_DIR}/aisles)
 set(API_DIR ${SRC_DIR}/api)
 set(CART_DIR ${SRC_DIR}/cart)
 set(ITEMS_DIR ${SRC_DIR}/items)
-set(CROW_DIR /Users/cameronhardin/Desktop/storeSpeedyPOC/server)  # Set absolute path for Crow
+set(CROW_DIR /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/server)  # Set absolute path for Crow
 
 # Find the CURL and Boost library packages, and make them required dependencies
 find_package(CURL REQUIRED)

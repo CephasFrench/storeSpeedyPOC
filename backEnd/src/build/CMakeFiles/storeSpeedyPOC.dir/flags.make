@@ -4,7 +4,7 @@
 # compile CXX with /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/aisles -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/api -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/cart -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/items -I/Users/cameronhardin/Desktop/storeSpeedyPOC/server -I/opt/homebrew/include -I/opt/homebrew/opt/jsoncpp/include -I/opt/homebrew/Cellar/poppler/24.04.0/include/poppler/cpp -I/opt/homebrew/Cellar/poppler/24.04.0/include/poppler -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4
+CXX_INCLUDES = -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/aisles -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/api -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/cart -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/items -I/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/server -I/opt/homebrew/include -I/opt/homebrew/opt/jsoncpp/include -I/opt/homebrew/Cellar/poppler/24.04.0/include/poppler/cpp -I/opt/homebrew/Cellar/poppler/24.04.0/include/poppler -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4
 
 CXX_FLAGSarm64 = -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk
 
