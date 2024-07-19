@@ -4,9 +4,6 @@ import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
 import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
-import InputWithButton from './components/InputWithButton';
-import GroceryList from './components/GroceryList';
-import AisleList from './components/AisleList';
 
 const validLocations = ["Default", "Valley Mills"];
 const userId = 'default'; // default user ID
@@ -58,7 +55,7 @@ export default function App() {
             const data = await response.json();
             console.log('Fetched grocery list:', data);
 
-            if (data.items && Array.isArray(data.items)) {
+            if (Array.isArray(data.items)) {
                 setGroceryList(data.items);
             } else if (Array.isArray(data)) {
                 setGroceryList(data);
@@ -188,6 +185,7 @@ export default function App() {
                         value={item}
                         onChangeText={setItem}
                         onSubmitEditing={handleAddItem}
+                        blurOnSubmit={false} // This allows the user to continue typing without losing focus
                     />
                     <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
                         <Text style={styles.addButtonText}>Add</Text>
@@ -236,16 +234,18 @@ export default function App() {
                     )
                 }
             />
-            <FlatList
-                data={aisles}
-                renderItem={({ item }) => (
-                    <View style={styles.aisleContainer}>
-                        <Text style={styles.aisleText}>{item}</Text>
-                    </View>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
-            />
+            {aisles.length > 0 && (
+                <FlatList
+                    data={aisles}
+                    renderItem={({ item }) => (
+                        <View style={styles.aisleContainer}>
+                            <Text style={styles.aisleText}>{item}</Text>
+                        </View>
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
+                />
+            )}
             <StatusBar style="auto" />
         </SafeAreaView>
     );
@@ -365,4 +365,3 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
 });
-
