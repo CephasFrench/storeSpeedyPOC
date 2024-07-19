@@ -1,4 +1,5 @@
 #include "api_util.h"
+#include "config.h"
 #include <string>
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
@@ -9,6 +10,9 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
 
 std::string performPostRequest(const std::string& url, struct curl_slist* headers, const std::string& jsonData)
 {
+    if(LOG_FUNC_CALLS) {
+        std::cout << "performPostRequest() called" << std:: endl;
+    }
     CURL* curl = curl_easy_init();
     CURLcode res;
     std::string readBuffer;
@@ -38,7 +42,9 @@ std::string performPostRequest(const std::string& url, struct curl_slist* header
 }
 
 std::string callGeminiApiWithItem(const std::string& item) {
-
+    if(LOG_FUNC_CALLS) {
+        std::cout << "callGeminiApiWithItem() called" << std:: endl;
+    }
     //std::string item = "walmart only items"; //testing
     const std::string url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBVCsqwcySc3JqoOolB2J6lIhAInzQ82ag";
     std::string promptText = "Please respond to this prompt with a JSON object in the following format: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"YES\"}]}}]}. The text should be 'YES' if HEB sells " + item + ", otherwise 'NO' and nothing else.";
@@ -77,6 +83,9 @@ std::string callGeminiApiWithItem(const std::string& item) {
 
 void handleErrorResponse(const std::string& response)
 {
+    if(LOG_FUNC_CALLS) {
+        std::cout << "handleErrorResponse() called" << std:: endl;
+    }
     Json::CharReaderBuilder readerBuilder;
     Json::Value jsonResponse;
     std::string errors;
@@ -117,141 +126,3 @@ void handleErrorResponse(const std::string& response)
     }
 }
 
-void parseAndDisplayJson(const std::string& response)
-{
-    std::cout << "Parsing general JSON response." << std::endl;
-    Json::CharReaderBuilder readerBuilder;
-    Json::Value jsonResponse;
-    std::string errors;
-
-    std::istringstream responseStream(response);
-    if (Json::parseFromStream(readerBuilder, responseStream, &jsonResponse, &errors)) {
-        if (jsonResponse.isObject() && jsonResponse.isMember("candidates")) {
-            const Json::Value& candidates = jsonResponse["candidates"];
-            if (candidates.isArray() && !candidates.empty()) {
-                const Json::Value& content = candidates[0]["content"]["parts"];
-                if (content.isArray() && !content.empty()) {
-                    std::string text = content[0]["text"].asString();
-
-                    // Remove backticks and "json" keyword
-                    size_t firstBacktick = text.find("```json\n");
-                    if (firstBacktick != std::string::npos) {
-                        text.erase(firstBacktick, 7); // Remove "```json\n"
-                    }
-                    size_t lastBacktick = text.rfind("\n```");
-                    if (lastBacktick != std::string::npos) {
-                        text.erase(lastBacktick, 4); // Remove "\n```"
-                    }
-
-                    // Separate the debugging message if present
-                    size_t debugMsgPos = text.find("\n\n");
-                    std::string debugMessage;
-                    if (debugMsgPos != std::string::npos) {
-                        debugMessage = text.substr(debugMsgPos + 2);
-                        text = text.substr(0, debugMsgPos);
-                    }
-
-                    // Parse the cleaned JSON text
-                    std::istringstream cleanedStream(text);
-                    if (Json::parseFromStream(readerBuilder, cleanedStream, &jsonResponse, &errors)) {
-                        if (jsonResponse.isObject()) {
-                            std::cout << "Parsed JSON: " << jsonResponse.toStyledString() << std::endl;
-                            if (!debugMessage.empty()) {
-                                std::cout << "Debugging message: " << debugMessage << std::endl;
-                            }
-                        } else {
-                            std::cerr << "Invalid JSON format received: " << text << std::endl;
-                        }
-                    } else {
-                        std::cerr << "Failed to parse cleaned JSON response: " << errors << std::endl;
-                        std::cerr << "Cleaned response received: " << text << std::endl;
-                    }
-                } else {
-                    std::cerr << "No parts found in content: " << response << std::endl;
-                }
-            } else {
-                std::cerr << "No candidates found in response: " << response << std::endl;
-            }
-        } else {
-            std::cerr << "Failed to parse JSON response: " << errors << std::endl;
-            //std::cerr << "Response received: " << response << std::endl;
-        }
-    }
-}
-
-void parseAisleNeighborsJson(const std::string& response, std::vector<Aisle>& neighbors)
-{
-    std::cout << "Parsing aisle neighbors JSON response." << std::endl;
-    Json::CharReaderBuilder readerBuilder;
-    Json::Value jsonResponse;
-    std::string errors;
-
-    std::istringstream responseStream(response);
-    if (Json::parseFromStream(readerBuilder, responseStream, &jsonResponse, &errors)) {
-        if (jsonResponse.isObject() && jsonResponse.isMember("candidates")) {
-            const Json::Value& candidates = jsonResponse["candidates"];
-            if (candidates.isArray() && !candidates.empty()) {
-                const Json::Value& content = candidates[0]["content"]["parts"];
-                if (content.isArray() && !content.empty()) {
-                    std::string text = content[0]["text"].asString();
-
-                    // Remove backticks and "json" keyword
-                    size_t firstBacktick = text.find("```json\n");
-                    if (firstBacktick != std::string::npos) {
-                        text.erase(firstBacktick, 7); // Remove "```json\n"
-                    }
-                    size_t lastBacktick = text.rfind("\n```");
-                    if (lastBacktick != std::string::npos) {
-                        text.erase(lastBacktick, 4); // Remove "\n```"
-                    }
-
-                    // Separate the debugging message if present
-                    size_t debugMsgPos = text.find("\n\n");
-                    std::string debugMessage;
-                    if (debugMsgPos != std::string::npos) {
-                        debugMessage = text.substr(debugMsgPos + 2);
-                        text = text.substr(0, debugMsgPos);
-                    }
-
-                    // Parse the cleaned JSON text
-                    Json::Value cleanedJsonResponse;
-                    std::istringstream cleanedStream(text);
-                    if (Json::parseFromStream(readerBuilder, cleanedStream, &cleanedJsonResponse, &errors)) {
-                        if (cleanedJsonResponse.isObject()) {
-                            for (const auto& key : cleanedJsonResponse.getMemberNames()) {
-                                Aisle aisle;
-                                aisle.num = std::stoi(key);
-                                const Json::Value& items = cleanedJsonResponse[key];
-                                if (items.isArray()) {
-                                    for (const auto& item : items) {
-                                        Aisle neighbor;
-                                        neighbor.num = item.asInt();
-                                        aisle.addNeighbor(neighbor);
-                                    }
-                                    neighbors.push_back(aisle);
-                                } else {
-                                    std::cerr << "Items for aisle " << key << " are not an array: " << items << std::endl;
-                                }
-                            }
-                            if (!debugMessage.empty()) {
-                                std::cout << "Debugging message: " << debugMessage << std::endl;
-                            }
-                        } else {
-                            std::cerr << "Invalid JSON format received: " << text << std::endl;
-                        }
-                    } else {
-                        std::cerr << "Failed to parse cleaned JSON response: " << errors << std::endl;
-                        std::cerr << "Cleaned response received: " << text << std::endl;
-                    }
-                } else {
-                    std::cerr << "No parts found in content: " << response << std::endl;
-                }
-            } else {
-                std::cerr << "No candidates found in response: " << response << std::endl;
-            }
-        } else {
-            std::cerr << "Failed to parse JSON response: " << errors << std::endl;
-            std::cerr << "Response received: " << response << std::endl;
-        }
-    }
-}

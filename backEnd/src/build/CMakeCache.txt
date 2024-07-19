@@ -231,6 +231,12 @@ CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
 //Path to a library.
 CURL_LIBRARY_RELEASE:FILEPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/lib/libcurl.tbd
 
+//Path to a file.
+JSONCPP_INCLUDE_DIR:PATH=/opt/homebrew/include
+
+//Path to a library.
+JSONCPP_LIBRARY:FILEPATH=/opt/homebrew/lib/libjsoncpp.dylib
+
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/opt/homebrew/lib/cmake/opencv4
 
@@ -495,7 +501,7 @@ POPPLER_poppler-cpp_LIBDIR:INTERNAL=
 POPPLER_poppler-cpp_PREFIX:INTERNAL=
 POPPLER_poppler-cpp_VERSION:INTERNAL=
 __pkg_config_arguments_PC_CURL:INTERNAL=QUIET;libcurl
-__pkg_config_arguments_POPPLER:INTERNAL=REQUIRED;poppler-cpp
+__pkg_config_arguments_POPPLER:INTERNAL=REQUIRED;IMPORTED_TARGET;poppler-cpp
 __pkg_config_checked_PC_CURL:INTERNAL=1
 __pkg_config_checked_POPPLER:INTERNAL=1
 //ADVANCED property for variable: boost_headers_DIR

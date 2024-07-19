@@ -1322,6 +1322,30 @@
 			"value" : "[/opt/homebrew/bin/pkg-config][v0.29.2()]"
 		},
 		{
+			"name" : "JSONCPP_INCLUDE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a file."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/include"
+		},
+		{
+			"name" : "JSONCPP_LIBRARY",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a library."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "/opt/homebrew/lib/libjsoncpp.dylib"
+		},
+		{
 			"name" : "OpenCV_DIR",
 			"properties" : 
 			[
@@ -1786,6 +1810,54 @@
 			"value" : "/opt/homebrew/bin/pkg-config"
 		},
 		{
+			"name" : "POPPLER_-cpp_INCLUDEDIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
+			"name" : "POPPLER_-cpp_LIBDIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
+			"name" : "POPPLER_-cpp_PREFIX",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
+			"name" : "POPPLER_-cpp_VERSION",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
 			"name" : "POPPLER_CFLAGS",
 			"properties" : 
 			[
@@ -1820,6 +1892,18 @@
 			],
 			"type" : "INTERNAL",
 			"value" : ""
+		},
+		{
+			"name" : "POPPLER_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for POPPLER."
+				}
+			],
+			"type" : "PATH",
+			"value" : "POPPLER_DIR-NOTFOUND"
 		},
 		{
 			"name" : "POPPLER_FOUND",
@@ -2206,6 +2290,54 @@
 			"value" : ""
 		},
 		{
+			"name" : "POPPLER_poppler_INCLUDEDIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
+			"name" : "POPPLER_poppler_LIBDIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
+			"name" : "POPPLER_poppler_PREFIX",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
+			"name" : "POPPLER_poppler_VERSION",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : ""
+		},
+		{
 			"name" : "__pkg_config_arguments_PC_CURL",
 			"properties" : 
 			[
@@ -2227,7 +2359,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "REQUIRED;poppler-cpp"
+			"value" : "REQUIRED;IMPORTED_TARGET;poppler-cpp"
 		},
 		{
 			"name" : "__pkg_config_checked_PC_CURL",
@@ -2270,6 +2402,18 @@
 			"value" : "/opt/homebrew/lib/cmake/boost_headers-1.85.0"
 		},
 		{
+			"name" : "jsoncpp_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for jsoncpp."
+				}
+			],
+			"type" : "PATH",
+			"value" : "jsoncpp_DIR-NOTFOUND"
+		},
+		{
 			"name" : "pkgcfg_lib_PC_CURL_curl",
 			"properties" : 
 			[
@@ -2284,6 +2428,22 @@
 			],
 			"type" : "FILEPATH",
 			"value" : "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/lib/libcurl.tbd"
+		},
+		{
+			"name" : "pkgcfg_lib_POPPLER_poppler",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a library."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "/opt/homebrew/Cellar/poppler/24.04.0/lib/libpoppler.dylib"
 		},
 		{
 			"name" : "pkgcfg_lib_POPPLER_poppler-cpp",

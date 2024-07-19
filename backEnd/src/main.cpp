@@ -1,6 +1,7 @@
 #include "crow_all.h"
 #include "StoreSpeedyJsonHandler.h"
 #include "api_util.h"
+#include "config.h"
 #include <fstream>
 #include <filesystem>
 #include <stdexcept>
@@ -26,6 +27,9 @@ constexpr const int CHECK_ITEM_MAX_RETRIES = 3;
 constexpr const int CHECK_ITEM_TIMEOUT_DURATION = 4000; // Should take no more than 4 seconds
 
 void ensureDirectoryExists(const std::string& dir) {
+    if(LOG_FUNC_CALLS) {
+        std::cout << "ensureDirectoryExists() called" << std:: endl;
+    }
     std::ifstream file(dir.c_str());
     if (!file) {
         std::system(("mkdir -p " + dir).c_str()); // Make a directory if it doesn't already exist
@@ -33,6 +37,9 @@ void ensureDirectoryExists(const std::string& dir) {
 }
 
 void ensureFileExists(const std::string& filePath, const Json::Value& defaultValue) {
+    if(LOG_FUNC_CALLS) {
+        std::cout << "ensureFileExists() called" << std:: endl;
+    }
     std::ifstream file(filePath);
     if (!file.good()) {
         std::ofstream outFile(filePath);
@@ -46,6 +53,9 @@ crow::response handleError(const std::exception& e) {
 }
 
 Json::Value readJsonData(const std::string& filePath, const Json::Value& defaultValue) {
+    if(LOG_FUNC_CALLS) {
+        std::cout << "readJsonData() (in main.cpp) called" << std:: endl;
+    }
     ensureFileExists(filePath, defaultValue);
     return StoreSpeedyJsonHandler::readJsonFile(filePath);
 }
@@ -57,6 +67,9 @@ void validateGroceryListJson(const Json::Value& jsonData) {
 }
 
 void addItemToGroceryList(const std::string& userId, const std::string& location, const std::string& item) {
+    if(LOG_FUNC_CALLS) {
+        std::cout << "addItemToGroceryList() called" << std:: endl;
+    }
     std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
     std::ifstream file(filePath, std::ifstream::binary);
     Json::Value root;

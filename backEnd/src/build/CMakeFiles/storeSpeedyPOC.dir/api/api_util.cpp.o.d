@@ -909,4 +909,5 @@ CMakeFiles/storeSpeedyPOC.dir/api/api_util.cpp.o: \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/deque \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/include/c++/v1/stack \
   /opt/homebrew/include/json/writer.h \
-  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/aisles/aisle.h
+  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/aisles/aisle.h \
+  /Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/config.h

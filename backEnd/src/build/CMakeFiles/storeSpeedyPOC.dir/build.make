@@ -173,6 +173,7 @@ storeSpeedyPOC: CMakeFiles/storeSpeedyPOC.dir/items/Item.cpp.o
 storeSpeedyPOC: CMakeFiles/storeSpeedyPOC.dir/StoreSpeedyJsonHandler.cpp.o
 storeSpeedyPOC: CMakeFiles/storeSpeedyPOC.dir/build.make
 storeSpeedyPOC: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk/usr/lib/libcurl.tbd
+storeSpeedyPOC: /opt/homebrew/lib/libjsoncpp.dylib
 storeSpeedyPOC: /opt/homebrew/lib/libopencv_gapi.4.10.0.dylib
 storeSpeedyPOC: /opt/homebrew/lib/libopencv_stitching.4.10.0.dylib
 storeSpeedyPOC: /opt/homebrew/lib/libopencv_alphamat.4.10.0.dylib
@@ -229,6 +230,7 @@ storeSpeedyPOC: /opt/homebrew/lib/libopencv_flann.4.10.0.dylib
 storeSpeedyPOC: /opt/homebrew/lib/libopencv_photo.4.10.0.dylib
 storeSpeedyPOC: /opt/homebrew/lib/libopencv_imgproc.4.10.0.dylib
 storeSpeedyPOC: /opt/homebrew/lib/libopencv_core.4.10.0.dylib
+storeSpeedyPOC: /opt/homebrew/Cellar/poppler/24.04.0/lib/libpoppler-cpp.dylib
 storeSpeedyPOC: CMakeFiles/storeSpeedyPOC.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable storeSpeedyPOC"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/storeSpeedyPOC.dir/link.txt --verbose=$(VERBOSE)

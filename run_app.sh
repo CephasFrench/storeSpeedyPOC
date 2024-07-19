@@ -8,6 +8,9 @@ check_for_updates() {
         if command -v brew > /dev/null; then
             brew update && brew upgrade
         fi
+        if command -v apt-get > /dev/null; then
+            sudo apt-get update && sudo apt-get upgrade -y
+        fi
         if command -v npm > /dev/null; then
             npm update
         fi
@@ -21,8 +24,10 @@ kill_process_on_port() {
     PORT=$1
     if command -v lsof > /dev/null; then
         lsof -ti tcp:$PORT | xargs kill -9
+    elif command -v netstat > /dev/null; then
+        fuser -k "$PORT"/tcp
     else
-        echo "lsof is not available to kill processes on port $PORT"
+        echo "Neither lsof nor netstat is available to kill processes on port $PORT"
         exit 1
     fi
 }
@@ -31,7 +36,7 @@ kill_process_on_port() {
 start_backend() {
     echo "Starting backend..."
 
-    BACKEND_DIR="/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/src"
+    BACKEND_DIR="$(pwd)/backEnd/src"
     BUILD_DIR="$BACKEND_DIR/build"
 
     # Kill any process using port 8080
@@ -73,6 +78,7 @@ start_backend() {
 start_frontend() {
     echo "Starting frontend..."
 
+    # Use the absolute path to the frontEnd directory
     FRONTEND_DIR="/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd"
 
     # Kill any process using port 8081 and 8082
@@ -85,12 +91,29 @@ start_frontend() {
         exit 1
     fi
 
-    # Use osascript to open a new Terminal window and run npx expo start
-    osascript <<EOF
+    # Install frontend dependencies
+    echo "Installing frontend dependencies..."
+    cd "$FRONTEND_DIR" || { echo "Failed to navigate to frontend directory"; exit 1; }
+    npm install || { echo "Failed to install frontend dependencies"; exit 1; }
+
+    # Open a new terminal window and run npx expo start
+    if command -v osascript > /dev/null; then
+        # macOS specific command to open a new terminal window
+        osascript <<EOF
 tell application "Terminal"
     do script "cd $FRONTEND_DIR && npx expo start --port 8082"
 end tell
 EOF
+    elif command -v gnome-terminal > /dev/null; then
+        # Linux with GNOME Terminal
+        gnome-terminal -- bash -c "cd $FRONTEND_DIR && npx expo start --port 8082; exec bash"
+    elif command -v xterm > /dev/null; then
+        # Generic X terminal emulator
+        xterm -hold -e "cd $FRONTEND_DIR && npx expo start --port 8082"
+    else
+        echo "No compatible terminal emulator found to open a new window for the frontend."
+        exit 1
+    fi
 }
 
 # Ensure the script runs in an interactive terminal
