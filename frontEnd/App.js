@@ -6,7 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
 import { USR_INPT_CHAR_LMT } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
 
-const validLocations = ["Default", "Valley_Mills"];
+const validLocations = ["Default", "ValleyMills"];
 const userId = 'default'; // default user ID
 const SERVER_URL = "http://localhost:8080"; // Replace localhost when applicable
 
