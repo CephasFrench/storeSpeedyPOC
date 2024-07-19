@@ -10,3 +10,5 @@ export const BOOLEAN_VALUES = {
     SHOW_SETTINGS_TAB: true,
     SHOW_NOTIFICATIONS_TOGGLE: true,
 };
+
+export const USR_INPT_CHAR_LMT = 200;

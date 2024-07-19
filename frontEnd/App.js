@@ -4,12 +4,14 @@ import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
 import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
+import { USR_INPT_CHAR_LMT } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
 
 const validLocations = ["Default", "Valley Mills"];
 const userId = 'default'; // default user ID
 const SERVER_URL = "http://localhost:8080"; // Replace localhost when applicable
 
 export default function App() {
+    // State management hooks
     const [location, setLocation] = useState('Default');
     const [item, setItem] = useState('');
     const [groceryList, setGroceryList] = useState([]);
@@ -18,6 +20,7 @@ export default function App() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // Effect to update location on the server
     useEffect(() => {
         const updateLocation = async () => {
             try {
@@ -37,6 +40,7 @@ export default function App() {
         updateLocation();
     }, [location]);
 
+    // Effect to fetch developer mode status from secure storage
     useEffect(() => {
         const fetchDeveloperMode = async () => {
             const storedIsDeveloper = await SecureStore.getItemAsync('isDeveloper');
@@ -46,6 +50,7 @@ export default function App() {
         fetchDeveloperMode();
     }, []);
 
+    // Fetch grocery list from the server
     const fetchGroceryList = async () => {
         try {
             const response = await fetch(`${SERVER_URL}/grocery_list/${userId}/${location}`);
@@ -70,10 +75,12 @@ export default function App() {
         }
     };
 
+    // Fetch grocery list on location change
     useEffect(() => {
         fetchGroceryList();
     }, [location]);
 
+    // Handle adding an item to the grocery list
     const handleAddItem = async () => {
         if (!item.trim()) {
             Alert.alert("Validation", "Please enter an item name.");
@@ -118,6 +125,7 @@ export default function App() {
         }
     };
 
+    // Handle removing an item from the grocery list
     const handleRemoveItem = async (index) => {
         const itemToRemove = groceryList[index];
         const updatedGroceryList = groceryList.filter((_, i) => i !== index);
@@ -143,6 +151,7 @@ export default function App() {
         }
     };
 
+    // Handle generating a shopping route
     const handleGenerateRoute = () => {
         fetch(`${SERVER_URL}/compute_path`)
             .then((response) => {
@@ -160,6 +169,16 @@ export default function App() {
             });
     };
 
+    // Combine grocery list and aisles data
+    const combinedData = [
+        { type: 'header' },
+        ...groceryList.map((item, index) => ({ type: 'grocery', item, index })),
+        BOOLEAN_VALUES.SHOW_GENERATE_ROUTE_BUTTON && { type: 'generateRoute' },
+        BOOLEAN_VALUES.SHOW_AISLES && aisles.length > 0 && { type: 'aislesHeader' },
+        ...aisles.map((item, index) => ({ type: 'aisle', item, index }))
+    ].filter(Boolean);
+
+    // Render header component
     const renderHeader = () => (
         <>
             <Text style={styles.header}>StoreSpeedy</Text>
@@ -183,7 +202,11 @@ export default function App() {
                         style={styles.input}
                         placeholder="Enter grocery item..."
                         value={item}
-                        onChangeText={setItem}
+                        onChangeText={(text) => {
+                            if (text.length <= USR_INPT_CHAR_LMT) {
+                                setItem(text);
+                            }
+                        }}
                         onSubmitEditing={handleAddItem}
                         blurOnSubmit={false} // This allows the user to continue typing without losing focus
                     />
@@ -196,6 +219,7 @@ export default function App() {
         </>
     );
 
+    // Render the loading screen
     if (loading) {
         return (
             <SafeAreaView style={styles.safeArea}>
@@ -204,6 +228,7 @@ export default function App() {
         );
     }
 
+    // Render the error screen
     if (error) {
         return (
             <SafeAreaView style={styles.safeArea}>
@@ -212,45 +237,48 @@ export default function App() {
         );
     }
 
+    // Main render
     return (
         <SafeAreaView style={styles.safeArea}>
             <FlatList
-                ListHeaderComponent={renderHeader}
-                data={groceryList}
-                renderItem={({ item, index }) => (
-                    <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>{item}</Text>
-                        <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveItem(index)}>
-                            <Text style={styles.removeButtonText}>Remove</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                ListFooterComponent={
-                    BOOLEAN_VALUES.SHOW_GENERATE_ROUTE_BUTTON && (
-                        <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
-                            <Text style={styles.buttonText}>Generate Route</Text>
-                        </TouchableOpacity>
-                    )
-                }
+                data={combinedData}
+                renderItem={({ item }) => {
+                    if (item.type === 'header') {
+                        return renderHeader();
+                    } else if (item.type === 'grocery') {
+                        return (
+                            <View style={styles.itemContainer}>
+                                <Text style={styles.itemText}>{item.item}</Text>
+                                <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveItem(item.index)}>
+                                    <Text style={styles.removeButtonText}>Remove</Text>
+                                </TouchableOpacity>
+                            </View>
+                        );
+                    } else if (item.type === 'generateRoute') {
+                        return (
+                            <TouchableOpacity style={styles.button} onPress={handleGenerateRoute}>
+                                <Text style={styles.buttonText}>Generate Route</Text>
+                            </TouchableOpacity>
+                        );
+                    } else if (item.type === 'aislesHeader') {
+                        return <Text style={styles.listHeader}>Aisles</Text>;
+                    } else if (item.type === 'aisle') {
+                        return (
+                            <View style={styles.aisleContainer}>
+                                <Text style={styles.aisleText}>{item.item}</Text>
+                            </View>
+                        );
+                    }
+                    return null;
+                }}
+                keyExtractor={(item, index) => `${item.type}-${index}`}
             />
-            {aisles.length > 0 && (
-                <FlatList
-                    data={aisles}
-                    renderItem={({ item }) => (
-                        <View style={styles.aisleContainer}>
-                            <Text style={styles.aisleText}>{item}</Text>
-                        </View>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                    ListHeaderComponent={<Text style={styles.listHeader}>Aisles</Text>}
-                />
-            )}
             <StatusBar style="auto" />
         </SafeAreaView>
     );
 }
 
+// Stylesheet for the app
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
