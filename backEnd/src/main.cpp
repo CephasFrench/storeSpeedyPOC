@@ -12,18 +12,18 @@
 std::string currentLocation = "DefaultLoc";  // Server-side variable to track the chosen location
 const std::string storagePath = "/Users/cameronhardin/Desktop/storeSpeedyPOC/backEnd/server/storage/";
 
-const int COMPUTE_PATH_MAX_RETRIES = 1;
-const int COMPUTE_PATH_TIMEOUT_DURATION = 15000;
-const int UPDATE_AISLE_DATA_MAX_RETRIES = 3;
-const int UPDATE_AISLE_DATA_TIMEOUT_DURATION = 5000;
-const int UPDATE_LOCATION_MAX_RETRIES = 3;
-const int UPDATE_LOCATION_TIMEOUT_DURATION = 5000;
-const int GROCERY_LIST_MAX_RETRIES = 3;
-const int GROCERY_LIST_TIMEOUT_DURATION = 5000;
-const int UPDATE_GROCERY_LIST_MAX_RETRIES = 5;         // Should nearly always work but this is a buffer jic
-const int UPDATE_GROCERY_LIST_TIMEOUT_DURATION = 5000; // Should communicate pretty quickly, but again a buffer
-const int CHECK_ITEM_MAX_RETRIES = 3;
-const int CHECK_ITEM_TIMEOUT_DURATION = 4000; // Should take no more than 4 seconds
+constexpr const int COMPUTE_PATH_MAX_RETRIES = 1;
+constexpr const int COMPUTE_PATH_TIMEOUT_DURATION = 15000;
+constexpr const int UPDATE_AISLE_DATA_MAX_RETRIES = 3;
+constexpr const int UPDATE_AISLE_DATA_TIMEOUT_DURATION = 5000;
+constexpr const int UPDATE_LOCATION_MAX_RETRIES = 3;
+constexpr const int UPDATE_LOCATION_TIMEOUT_DURATION = 5000;
+constexpr const int GROCERY_LIST_MAX_RETRIES = 3;
+constexpr const int GROCERY_LIST_TIMEOUT_DURATION = 5000;
+constexpr const int UPDATE_GROCERY_LIST_MAX_RETRIES = 5;         // Should nearly always work but this is a buffer jic
+constexpr const int UPDATE_GROCERY_LIST_TIMEOUT_DURATION = 5000; // Should communicate pretty quickly, but again a buffer
+constexpr const int CHECK_ITEM_MAX_RETRIES = 3;
+constexpr const int CHECK_ITEM_TIMEOUT_DURATION = 4000; // Should take no more than 4 seconds
 
 void ensureDirectoryExists(const std::string& dir) {
     std::ifstream file(dir.c_str());

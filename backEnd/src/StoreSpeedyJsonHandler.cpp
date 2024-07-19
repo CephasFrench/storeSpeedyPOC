@@ -5,14 +5,23 @@
 
 namespace StoreSpeedyJsonHandler {
 
-Json::Value readJsonFile(const std::string& filePath) {
-    std::ifstream file(filePath);
+Json::Value readJsonFile(const std::string& filePath) { // More efficient use of fstream
+    std::ifstream file(filePath, std::ifstream::binary);
     if (!file.is_open()) {
         throw std::runtime_error("Could not open file: " + filePath);
     }
 
+    // Read the file into a stringstream for more efficient parsing
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    
+    // Close the file
+    file.close();
+
+    // Parse the JSON data
     Json::Value jsonData;
-    file >> jsonData;
+    buffer >> jsonData;
+
     return jsonData;
 }
 

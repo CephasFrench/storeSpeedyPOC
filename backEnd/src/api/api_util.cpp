@@ -70,7 +70,6 @@ std::string callGeminiApiWithItem(const std::string& item) {
         std::cerr << "No response received from the API." << std::endl;
     }
 
-
     curl_slist_free_all(headers);
 
     return response;
