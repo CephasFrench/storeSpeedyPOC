@@ -1,0 +1,7 @@
+# ninja log v6
+1	377	1721418884848083781	CMakeFiles/storeSpeedyPOC.dir/aisles/Aisle.cpp.o	8322b8bcb47c8bd5
+2	582	1721418884848632329	CMakeFiles/storeSpeedyPOC.dir/items/Item.cpp.o	d5ae3593c27a4969
+1	635	1721418884848277325	CMakeFiles/storeSpeedyPOC.dir/api/api_util.cpp.o	67ec3f6e1834d03c
+2	751	1721418884848472827	CMakeFiles/storeSpeedyPOC.dir/cart/Cart.cpp.o	86368414892ed0ae
+2	798	1721418884848793705	CMakeFiles/storeSpeedyPOC.dir/StoreSpeedyJsonHandler.cpp.o	43dcc781354f7dd4
+1	8046	1721418884847739903	CMakeFiles/storeSpeedyPOC.dir/main.cpp.o	d8dc62d2094a362f

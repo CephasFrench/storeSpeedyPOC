@@ -7,8 +7,8 @@ import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/fron
 import { USR_INPT_CHAR_LMT } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
 
 const validLocations = ["Default", "ValleyMills"];
-const userId = 'default'; // default user ID
-const SERVER_URL = "http://localhost:8080"; // Replace localhost when applicable
+const SERVER_URL     = "http://localhost:8080";     // Replace localhost with true server URL
+const userId         = 'default';                   // default user ID
 
 export default function App() {
     // State management hooks

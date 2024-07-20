@@ -8,7 +8,7 @@
 class Cart {
 public:
     void addItem(const Item& item);
-    void removeItem(const std::string& itemName);
+    void removeItem(Item& item);
     std::vector<Item> getItems() const;
 
 private:

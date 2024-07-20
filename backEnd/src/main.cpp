@@ -48,10 +48,7 @@ void ensureFileExists(const std::string& filePath, const Json::Value& defaultVal
     }
 }
 
-crow::response handleError(const std::exception& e) {
-    return crow::response(500, e.what());
-}
-
+// /compute_path route helper function
 Json::Value readJsonData(const std::string& filePath, const Json::Value& defaultValue) {
     if(LOG_FUNC_CALLS) {
         std::cout << "readJsonData() (in main.cpp) called" << std:: endl;
@@ -60,16 +57,11 @@ Json::Value readJsonData(const std::string& filePath, const Json::Value& default
     return StoreSpeedyJsonHandler::readJsonFile(filePath);
 }
 
-void validateGroceryListJson(const Json::Value& jsonData) {
-    if (!jsonData.isMember("items") || !jsonData["items"].isArray()) {
-        throw std::runtime_error("Invalid JSON structure: 'items' key missing or not an array.");
-    }
-}
-
 void addItemToGroceryList(const std::string& userId, const std::string& location, const std::string& item) {
     if(LOG_FUNC_CALLS) {
         std::cout << "addItemToGroceryList() called" << std:: endl;
     }
+
     std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
     std::ifstream file(filePath, std::ifstream::binary);
     Json::Value root;
@@ -179,7 +171,7 @@ void defineRoutes(crow::SimpleApp& app) {
     });
 
     // Get user's grocery list endpoint
-    CROW_ROUTE(app, "/grocery_list/<string>/<string>").methods("GET"_method)
+    CROW_ROUTE(app, "/grocery_list/<string>/<string>").methods("GET"_method) //<string><string> takes userID, location (frontend)
     ([](const std::string& userId, const std::string& location) {
         int retries = 0;
         std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
@@ -224,7 +216,7 @@ void defineRoutes(crow::SimpleApp& app) {
     });
 
     // Update user's grocery list endpoint
-    CROW_ROUTE(app, "/update_grocery_list/<string>/<string>").methods("POST"_method)
+    CROW_ROUTE(app, "/update_grocery_list/<string>/<string>").methods("POST"_method) //<string><string> takes userID, location (frontend)
     ([](const crow::request& req, const std::string& userId, const std::string& location) {
         int retries = 0;
         std::string filePath = storagePath + "users/" + userId + "/" + location + "_grocery_list.json";
@@ -235,12 +227,18 @@ void defineRoutes(crow::SimpleApp& app) {
                 std::istringstream iss(req.body);
                 Json::CharReaderBuilder rbuilder;
                 std::string errs;
+
                 if (!Json::parseFromStream(rbuilder, iss, &jsonData, &errs)) {
                     return crow::response(400, "Invalid JSON");
                 }
-                validateGroceryListJson(jsonData);
+
+                if (!jsonData.isMember("items") || !jsonData["items"].isArray()) { // Used to be its own method called validateGroceryListJson
+                    throw std::runtime_error("Invalid JSON structure: 'items' key missing or not an array.");
+                }
+
                 StoreSpeedyJsonHandler::writeJsonFile(filePath, jsonData);
                 std::cout << "Grocery list updated successfully." << std::endl;
+
                 return crow::response(200);
             } catch (const std::exception& e) {
                 std::cerr << "Error updating grocery list, attempt " << (retries + 1) << ": " << e.what() << std::endl;
@@ -251,7 +249,7 @@ void defineRoutes(crow::SimpleApp& app) {
         return crow::response(500, "Failed to update grocery list after multiple attempts.");
     });
 
-    // Check item endpoint
+    // Check item endpoint, prompts AI with item and adds if response is YES.
     CROW_ROUTE(app, "/check_item").methods("POST"_method)
     ([](const crow::request& req) {
         int retries = 0;
@@ -270,7 +268,7 @@ void defineRoutes(crow::SimpleApp& app) {
                 }
                 std::string item = jsonBody["item"].asString();
                 std::cout << "ITEM IS: " << item << std::endl;
-                std::string response = callGeminiApiWithItem(item);
+                std::string response = callGeminiApiWithItem(item); // AI call with item
                 std::cout << "RESPONSE IS: " << response << std::endl;
 
                 // Parse the response to check if the item is available
@@ -309,8 +307,15 @@ void defineRoutes(crow::SimpleApp& app) {
                                                 std::cout << "Parsed nested text: " << nestedText << std::endl;
                                                 if (nestedText == "YES") {
                                                     addItemToGroceryList("default", currentLocation, item); // Add item to the grocery list
+
+                                                    //updateItemInfo();
+                                                    //getItemInfo();
+
                                                     return crow::response("YES");
                                                 } else {
+
+                                                    //promptAIforAlternatinves();
+
                                                     return crow::response("NO");
                                                 }
                                             }
@@ -332,6 +337,53 @@ void defineRoutes(crow::SimpleApp& app) {
         }
         return crow::response(500, "Failed to check item after multiple attempts.");
     });
+
+    // The following endpoints are called by checkitem endpoint:
+    // item_info endpoint which can be used to retrieve json info based on barcode
+    /*
+    CROW_ROUTE(app, "/item_info/<string>/<string>").methods("GET"_method) //<string><string> is itemBarCode, location
+    ([](const std::string& userId, const std::string& location) {
+        int retries = 0;
+        std::string filePath = storagePath + "locations/" + location + "/" + itemID + ".json";
+
+        while (retries < GROCERY_LIST_MAX_RETRIES) {
+            try {
+                std::ifstream file(filePath, std::ifstream::binary);
+                if (!file.is_open()) {
+                    // If the file doesn't exist, create it with an empty grocery list
+                    Json::Value root;
+                    root["items"] = Json::arrayValue;
+                    std::ofstream outFile(filePath, std::ofstream::binary);
+                    outFile << root.toStyledString();
+                    outFile.close();
+
+                    // Re-open the newly created file
+                    file.open(filePath, std::ifstream::binary);
+                    if (!file.is_open()) {
+                        return crow::response(500, "Failed to create and open the grocery list file.");
+                    }
+                }
+
+                Json::Value root;
+                file >> root;
+                file.close();
+
+                if (!root.isMember("items") || !root["items"].isArray()) {
+                    return crow::response(400, "Invalid JSON structure: 'items' key missing or not an array.");
+                }
+
+                Json::Value response;
+                response["items"] = root["items"];
+                std::cout << "Grocery list fetched successfully: " << response.toStyledString() << std::endl;
+                return crow::response(response.toStyledString());
+            } catch (const std::exception& e) {
+                std::cerr << "Error reading grocery list, attempt " << (retries + 1) << ": " << e.what() << std::endl;
+                retries++;
+                std::this_thread::sleep_for(std::chrono::milliseconds(GROCERY_LIST_TIMEOUT_DURATION));
+            }
+        }
+        return crow::response(500, "Failed to read grocery list after multiple attempts.");
+    });*/
 }
 
 int main() {

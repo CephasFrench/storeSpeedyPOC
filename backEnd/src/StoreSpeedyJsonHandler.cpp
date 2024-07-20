@@ -65,14 +65,14 @@ std::vector<std::string> getItems(const Json::Value& jsonData) {
     return items;
 }
 
-void addItem(Json::Value& jsonData, const std::string& newItem) {
+/* unnecessary?
+void addItemToStorage(Json::Value& jsonData, const std::string& newItem) {
     if (validateGroceryListJson(jsonData)) {
         jsonData["items"].append(newItem);
     } else {
         throw std::runtime_error("Invalid grocery list JSON structure.");
     }
-}
-
+}*/
 
 void parseAndDisplayJson(const std::string& response)
 {

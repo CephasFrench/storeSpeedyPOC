@@ -47,6 +47,7 @@ endif()
 
 # Find Poppler using PkgConfig
 # Poppler is a PDF rendering library, often available via package managers
+# Flag this as an unnecessary dependency later
 pkg_check_modules(POPPLER REQUIRED IMPORTED_TARGET poppler-cpp)
 if (NOT POPPLER_FOUND)
     message(FATAL_ERROR "Poppler library not found")

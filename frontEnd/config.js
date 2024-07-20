@@ -3,12 +3,12 @@
 
 export const BOOLEAN_VALUES = {
     DEVELOPER_MODE: true,
-    SHOW_ITEM_INPUT: true,
-    SHOW_GENERATE_ROUTE_BUTTON: true,
-    SHOW_AISLES: true,
+    SHOW_ITEM_INPUT: false,
+    SHOW_GENERATE_ROUTE_BUTTON: false,
+    SHOW_AISLES: false,
     SHOW_HOME_TAB: true,
     SHOW_SETTINGS_TAB: true,
-    SHOW_NOTIFICATIONS_TOGGLE: true,
+    SHOW_NOTIFICATIONS_TOGGLE: false,
 };
 
 export const USR_INPT_CHAR_LMT = 200;

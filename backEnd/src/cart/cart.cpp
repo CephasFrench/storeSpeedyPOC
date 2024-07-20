@@ -11,13 +11,16 @@ void Cart::addItem(const Item& item) {
     items.push_back(item);
 }
 
-void Cart::removeItem(const std::string& itemName) {
+void Cart::removeItem(Item& itemA) {
     if(LOG_FUNC_CALLS) {
         std::cout << "removeItem() called" << std:: endl;
     }
-    items.erase(std::remove_if(items.begin(), items.end(), [&itemName](const Item& item) {
-        return item.name == itemName;
-    }), items.end());
+
+    int barcodeNum = itemA.getBarcodeNum();
+    
+    items.erase(std::remove_if(items.begin(), items.end(), [&barcodeNum](Item& itemB) {
+        return (itemB.getBarcodeNum() == barcodeNum);
+    }), items.end()); //Removes item FROM CART (not server memory)
 }
 
 std::vector<Item> Cart::getItems() const {
