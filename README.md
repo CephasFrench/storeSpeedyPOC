@@ -1,3 +1,183 @@
+# Project File Structure:
+
+```
+STORESPEEDYPOC/
+├── .expo/
+├── .vscode/
+├── backEnd/
+│   ├── build/
+│   ├── server/
+│   │   ├── Crow/
+│   │   ├── storage/
+│   │   │   ├── locations/
+│   │   │   │   ├── DefaultLoc/
+│   │   │   │   ├── ValleyMillsWaco/
+│   │   │   ├── users/
+│   │   │       ├── cam/
+│   │   │       ├── default/
+│   ├── src/
+│   │   ├── aisles/
+│   │   │   ├── aisle.cpp
+│   │   │   ├── aisle.h
+│   │   ├── api/
+│   │   │   ├── api_util.cpp
+│   │   │   ├── api_util.h
+│   │   ├── build/
+│   │   ├── cart/
+│   │   │   ├── cart.cpp
+│   │   │   ├── cart.h
+│   │   ├── items/
+│   │       ├── build_and_run.sh
+│   │       ├── Item.cpp
+│   │       ├── Item.h
+│   │       ├── itemTesting.cpp
+│   ├── build.sh
+│   ├── CMakeLists.txt
+│   ├── config.h
+│   ├── crow_all.h
+│   ├── infoForCam.txt
+│   ├── main.cpp
+│   ├── package-lock.json
+│   ├── StoreSpeedyJsonHandler.cpp
+│   ├── StoreSpeedyJsonHandler.h
+│   ├── itemDatabase.cpp
+├── Devmode/
+├── files/
+├── frontEnd/
+│   ├── .expo/
+│   ├── assets/
+│   ├── components/
+│   │   ├── AisleList.js
+│   │   ├── GroceryList.js
+│   │   ├── InputWithButton.js
+│   ├── navigation/
+│   │   ├── MainTabNavigator.js
+│   ├── node_modules/
+│   ├── screens/
+│   │   ├── HomeScreen.js
+│   │   ├── SettingsScreen.js
+│   ├── utils/
+│   │   ├── api.js
+│   │   ├── cookieManager.js
+│   ├── App.js
+│   ├── app.json
+│   ├── config.js
+│   ├── index.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+├── .gitignore
+├── info for other distributions.txt
+├── package-lock.json
+├── README.md
+├── run_app.sh
+```
+
+# Potential file structure after added Features:
+
+```
+STORESPEEDYPOC/
+├── .expo/
+├── .vscode/
+├── backEnd/
+│   ├── build/
+│   ├── server/
+│   │   ├── Crow/
+│   │   ├── storage/
+│   │   │   ├── locations/
+│   │   │   │   ├── DefaultLoc/
+│   │   │   │   ├── ValleyMillsWaco/
+│   │   │   ├── users/
+│   │   │       ├── cam/
+│   │   │       ├── default/
+│   ├── src/
+│   │   ├── aisles/
+│   │   │   ├── aisle.cpp
+│   │   │   ├── aisle.h
+│   │   ├── api/
+│   │   │   ├── api_util.cpp
+│   │   │   ├── api_util.h
+│   │   ├── build/
+│   │   ├── cart/
+│   │   │   ├── cart.cpp
+│   │   │   ├── cart.h
+│   │   ├── items/
+│   │   │   ├── build_and_run.sh
+│   │   │   ├── Item.cpp
+│   │   │   ├── Item.h
+│   │   │   ├── itemTesting.cpp
+│   │   ├── notifications/          <-- New folder for notification-related features
+│   │   │   ├── out_of_stock.cpp
+│   │   │   ├── item_expiration.cpp
+│   │   │   ├── donation_integration.cpp
+│   │   ├── suggestions/            <-- New folder for AI and recommendation features
+│   │   │   ├── ai_tips.cpp
+│   │   │   ├── bulk_purchase.cpp
+│   │   │   ├── smart_substitutions.cpp
+│   │   │   ├── recipe_suggestions.cpp
+│   ├── build.sh
+│   ├── CMakeLists.txt
+│   ├── config.h
+│   ├── crow_all.h
+│   ├── infoForCam.txt
+│   ├── main.cpp
+│   ├── package-lock.json
+│   ├── StoreSpeedyJsonHandler.cpp
+│   ├── StoreSpeedyJsonHandler.h
+│   ├── itemDatabase.cpp
+├── Devmode/
+├── files/
+├── frontEnd/
+│   ├── .expo/
+│   ├── assets/
+│   ├── components/
+│   │   ├── AisleList.js
+│   │   ├── GroceryList.js
+│   │   ├── InputWithButton.js
+│   │   ├── FavoriteItems.js            <-- New component for favorite items
+│   │   ├── DealsCoupons.js             <-- New component for deals and coupons
+│   │   ├── DietaryAlerts.js            <-- New component for dietary restrictions / allergen alerts
+│   │   ├── Notifications.js            <-- New component for notifications (e.g., out of stock, expiration alerts)
+│   │   ├── LoyaltyProgram.js           <-- New component for loyalty program integration
+│   │   ├── CurbsideScheduling.js       <-- New component for curbside scheduling
+│   │   ├── DonationCharity.js          <-- New component for donation/charity integration
+│   │   ├── AppIncentives.js            <-- New component for gamification
+│   │   ├── NutritionistIntegration.js  <-- New component for nutritionist/doctor integration
+│   │   ├── BulkPurchase.js             <-- New component for bulk purchase recommendations
+│   │   ├── Budgeting.js                <-- New component for budgeting
+│   │   ├── AIFlavorPairing.js          <-- New component for AI flavor pairing
+│   │   ├── LocalProduceTagging.js      <-- New component for local produce tagging
+│   │   ├── VoiceSearchNavigation.js    <-- New component for voice search and navigation
+│   ├── navigation/
+│   │   ├── MainTabNavigator.js
+│   ├── node_modules/
+│   ├── screens/
+│   │   ├── HomeScreen.js
+│   │   ├── SettingsScreen.js
+│   ├── utils/
+│   │   ├── api.js
+│   │   ├── cookieManager.js
+│   │   ├── NotificationUtil.js     <-- New utility for handling notifications
+│   │   ├── DietaryUtil.js          <-- New utility for dietary restrictions and allergen alerts
+│   │   ├── RecommendationUtil.js   <-- New utility for AI-based recommendations
+│   │   ├── LoyaltyUtil.js          <-- New utility for loyalty program integration
+│   │   ├── BudgetingUtil.js        <-- New utility for budgeting
+│   │   ├── FlavorPairingUtil.js    <-- New utility for AI flavor pairing
+│   │   ├── ProduceTaggingUtil.js   <-- New utility for local produce tagging
+│   ├── App.js
+│   ├── app.json
+│   ├── config.js
+│   ├── index.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+├── .gitignore
+├── info for other distributions.txt
+├── package-lock.json
+├── README.md
+├── run_app.sh
+```
+
 # storeSpeedyPOC SPRINT Plan
 
 json:
