@@ -37,6 +37,10 @@ int main() {
 
     cout << "Execution time: " << minutes << " minutes, " << seconds << " seconds, " << milliseconds << " milliseconds" << endl;
 
+    cout << "the distance data" << endl;
+
+    cout << maze.getNodeData().str();
+
 
     return 0;
 }

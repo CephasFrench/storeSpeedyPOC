@@ -86,7 +86,7 @@ bool Maze::isValid(int row, int col)
     }
     return true;
 }
-
+// TODO: MAKE DIJKSTRA SO THAT IT ALSO RETURNS THE PATH IN CORDINATES FROM START TO END
 int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
 {
     // Create a priority queue to store the nodes to be visited
