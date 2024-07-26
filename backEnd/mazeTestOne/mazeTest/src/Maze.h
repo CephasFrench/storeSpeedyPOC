@@ -33,7 +33,8 @@ private:
     void fileParser();
     void storeNodes();
     bool isValid(int row, int col);
-    int dijkstra(pair<int,int> start, pair<int,int> end);
+    //int dijkstra(pair<int,int> start, pair<int,int> end);
+    pair<int, string> dijkstra(pair<int, int> start, pair<int, int> end);
     void makeNodes();
     list<GraphNode> getNodes() {
 		return Nodes;

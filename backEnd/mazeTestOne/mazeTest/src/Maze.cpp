@@ -87,13 +87,15 @@ bool Maze::isValid(int row, int col)
     return true;
 }
 // TODO: MAKE DIJKSTRA SO THAT IT ALSO RETURNS THE PATH IN CORDINATES FROM START TO END
-int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
-{
+pair<int, string> Maze::dijkstra(pair<int, int> start, pair<int, int> end) {
     // Create a priority queue to store the nodes to be visited
     priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
 
     // Create a 2D vector to store the distances from the start node
     vector<vector<int>> distance(mazeArray.size(), vector<int>(mazeArray[0].size(), INT_MAX));
+
+    // Create a 2D vector to store the parents of each node
+    vector<vector<pair<int, int>>> parent(mazeArray.size(), vector<pair<int, int>>(mazeArray[0].size(), { -1, -1 }));
 
     // Set the distance of the start node to 0
     distance[start.first][start.second] = 0;
@@ -105,8 +107,7 @@ int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
     vector<vector<bool>> visited(mazeArray.size(), vector<bool>(mazeArray[0].size(), false));
 
     // Loop until the priority queue is empty
-    while (!pq.empty())
-    {
+    while (!pq.empty()) {
         // Get the current node from the priority queue
         pair<int, pair<int, int>> current = pq.top();
         pq.pop();
@@ -116,15 +117,19 @@ int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
         int col = current.second.second;
 
         // Check if the current node is the end node
-        if (current.second == end)
-        {
-            // Return the distance to the end node
-            return distance[row][col];
+        if (current.second == end) {
+            // Reconstruct the path
+            string path = to_string(end.first) + "," + to_string(end.second) + "\n";
+            pair<int, int> step = end;
+            while (step != start) {
+                step = parent[step.first][step.second];
+                path = to_string(step.first) + "," + to_string(step.second) + "\n" + path;
+            }
+            return make_pair(distance[row][col], path);
         }
 
         // Check if the current node has already been visited
-        if (visited[row][col])
-        {
+        if (visited[row][col]) {
             continue;
         }
 
@@ -140,29 +145,27 @@ int Maze::dijkstra(pair<int, int> start, pair<int, int> end)
         };
 
         // Loop through the neighbors
-        for (const auto& neighbor : neighbors)
-        {
+        for (const auto& neighbor : neighbors) {
             int neighborRow = neighbor.first;
             int neighborCol = neighbor.second;
 
             // Check if the neighbor is valid and not visited
-            if (isValid(neighborRow, neighborCol) && !visited[neighborRow][neighborCol])
-            {
+            if (isValid(neighborRow, neighborCol) && !visited[neighborRow][neighborCol]) {
                 // Calculate the distance to the neighbor
                 int neighborDistance = distance[row][col] + 1;
 
                 // Update the distance if it is shorter
-                if (neighborDistance < distance[neighborRow][neighborCol])
-                {
+                if (neighborDistance < distance[neighborRow][neighborCol]) {
                     distance[neighborRow][neighborCol] = neighborDistance;
                     pq.push(make_pair(neighborDistance, make_pair(neighborRow, neighborCol)));
+                    parent[neighborRow][neighborCol] = { row, col };
                 }
             }
         }
     }
 
-    // If the end node is not reachable, return -1
-    return -1;
+    // If the end node is not reachable, return -1 and an empty path
+    return make_pair(-1, "");
 }
 
 // This function runs dijkstra's from every node to each other node to create the list of nodes
@@ -213,9 +216,11 @@ void Maze::makeNodes()
 			}
 
 			// Calculate the distance from the start node to the end node
-			int distance = dijkstra(startNode.second, endNode.second);
+			//int distance = dijkstra(startNode.second, endNode.second);
+			auto distance = dijkstra(startNode.second, endNode.second);
 
 			// Add the end node and distance to the list
+			//distances.push_back(make_pair(endNode.first, distance));
 			distances.push_back(make_pair(endNode.first, distance));
         }
 
