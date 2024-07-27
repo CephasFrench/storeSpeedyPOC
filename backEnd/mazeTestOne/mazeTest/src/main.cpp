@@ -18,6 +18,16 @@ int main() {
     StoreGraph myGraph = myStoreGraphFactory.getGraph(maze.getNodeData());
     Path path = myGraph.FindPath();
 
+    ofstream output("paths.txt");
+    if (!output)
+    {
+        cout << "failes to open file" << endl;
+        return 1;
+    }
+
+    output << path.printPath();
+    output.close();
+
 
     //////////////////////////////////////////////////////////
    /* Maze maze;
@@ -27,22 +37,22 @@ int main() {
     //////////////////////////////////////////////////////////
 
 
-    cout << "The shortest path is:" << endl;
-    cout << path.size() << " nodes" << endl;
-    cout << "the total distance is: " << myGraph.getTotalDistance() << endl;
+    //cout << "The shortest path is:" << endl;
+    //cout << path.size() << " nodes" << endl;
+    //cout << "the total distance is: " << myGraph.getTotalDistance() << endl;
     // Print the path
-    for (const auto& node : path.getNodes()) {
-        cout << node.getName() << endl;
-    }
+    //for (const auto& node : path.getNodes()) {
+    //    cout << node.getName() << endl;
+    //}
 
-    auto end = std::chrono::high_resolution_clock::now(); // Store the current time
-    auto duration = chrono::duration_cast<std::chrono::milliseconds>(end - start); // Calculate the duration
-    int minutes = duration.count() / 60000;
-    int seconds = (duration.count() % 60000) / 1000;
-    int milliseconds = duration.count() % 1000;
+    //auto end = std::chrono::high_resolution_clock::now(); // Store the current time
+    //auto duration = chrono::duration_cast<std::chrono::milliseconds>(end - start); // Calculate the duration
+    //int minutes = duration.count() / 60000;
+    //int seconds = (duration.count() % 60000) / 1000;
+    //int milliseconds = duration.count() % 1000;
 
-    cout << "Execution time: " << minutes << " minutes, " << seconds << " seconds, " << milliseconds << " milliseconds" << endl;
+    //cout << "Execution time: " << minutes << " minutes, " << seconds << " seconds, " << milliseconds << " milliseconds" << endl;
 
-    cout << endl << path.printPath();
+    //cout << endl << path.printPath();
     return 0;
 }

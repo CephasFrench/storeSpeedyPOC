@@ -27,7 +27,7 @@ public:
         Path currentPath;
 
         // Find the start node
-        cout << "Finding the start node" << endl;
+        //cout << "Finding the start node" << endl;
         for (int i = 0; i < myNodes.size(); i++) {
             GraphNode node = myNodes[i];
             if (node.getName() == "entrance") {
@@ -39,8 +39,8 @@ public:
         }
         
         // now have the start node find the path
-        cout << "Finding the path" << endl;
-        cout << "Number of nodes: " << myNodes.size() << endl;
+        //cout << "Finding the path" << endl;
+        //cout << "Number of nodes: " << myNodes.size() << endl;
         pathCall(myNodes, startNode, currentPath);
         // add the last node so the path shows the whole loop
         return shortestPath;

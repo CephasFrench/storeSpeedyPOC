@@ -1,1 +1,1 @@
-python.exe .\mazeMaker.py
+python.exe .\seeResults.py
