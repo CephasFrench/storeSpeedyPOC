@@ -87,7 +87,7 @@ bool Maze::isValid(int row, int col)
     return true;
 }
 // TODO: MAKE DIJKSTRA SO THAT IT ALSO RETURNS THE PATH IN CORDINATES FROM START TO END
-pair<int, string> Maze::dijkstra(pair<int, int> start, pair<int, int> end) {
+Edge Maze::dijkstra(pair<int, int> start, pair<int, int> end) {
     // Create a priority queue to store the nodes to be visited
     priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
 
@@ -119,13 +119,19 @@ pair<int, string> Maze::dijkstra(pair<int, int> start, pair<int, int> end) {
         // Check if the current node is the end node
         if (current.second == end) {
             // Reconstruct the path
-            string path = to_string(end.first) + "," + to_string(end.second) + "\n";
+            //string path = to_string(end.first) + "," + to_string(end.second) + "\n";
+            //string path = to_string(end.second) + "," + to_string(end.first) + "\n";
+            vector<pair<int, int>> path;
+            path.push_back(make_pair(end.second, end.first));
             pair<int, int> step = end;
             while (step != start) {
                 step = parent[step.first][step.second];
-                path = to_string(step.first) + "," + to_string(step.second) + "\n" + path;
+                //path = to_string(step.first) + "," + to_string(step.second) + "\n" + path;
+                //path = to_string(step.second) + "," + to_string(step.first) + "\n" + path;
+                path.push_back(make_pair(step.second, step.first));
             }
-            return make_pair(distance[row][col], path);
+            return Edge(make_pair(distance[row][col], path));
+            //return make_pair(distance[row][col], path);
         }
 
         // Check if the current node has already been visited
@@ -165,13 +171,17 @@ pair<int, string> Maze::dijkstra(pair<int, int> start, pair<int, int> end) {
     }
 
     // If the end node is not reachable, return -1 and an empty path
-    return make_pair(-1, "");
+    //return make_pair(-1, "");
+    // THIS IS A DUMMY FILLER PATH
+    vector<pair<int, int>> path;
+    return Edge(make_pair(-1, path));
 }
 
 // This function runs dijkstra's from every node to each other node to create the list of nodes
 // and their distance to each other node
-void Maze::makeNodes()
+string Maze::makeNodes()
 {
+    stringstream ss;
     // loop though every node, find distance from each node to itself
     for (auto startNode : this->nodeNameAndLocation)
     {
@@ -188,11 +198,11 @@ void Maze::makeNodes()
         catch (const std::runtime_error& e) 
         {
             std::cerr << "Exception: " << e.what() << std::endl;
-            return;
+            return "error invalid start and end node in Maze::makeNodes";
         }
 
         // Create the list to store the distances from the start node to each other node
-        vector<pair<string, double>> distances;
+        vector<Edge> distances;
 
         for (auto endNode : this->nodeNameAndLocation)
         {
@@ -212,16 +222,23 @@ void Maze::makeNodes()
 			catch (const std::runtime_error& e) 
 			{
 				std::cerr << "Exception: " << e.what() << std::endl;
-				return;
+                return "error invalid start and end node in Maze::makeNodes";
 			}
 
 			// Calculate the distance from the start node to the end node
 			//int distance = dijkstra(startNode.second, endNode.second);
-			auto distance = dijkstra(startNode.second, endNode.second);
+            // the current edge
+			Edge currEdge= dijkstra(startNode.second, endNode.second);
+            // Add the name
+            currEdge.setDestination(endNode.first);
 
 			// Add the end node and distance to the list
+            distances.push_back(currEdge);
 			//distances.push_back(make_pair(endNode.first, distance));
-			distances.push_back(make_pair(endNode.first, distance));
+
+
+            // add the path to the stringstream
+            ss << currEdge.printEdge();
         }
 
         // Create a new node with the name of the start node and the distances to each other node
@@ -231,4 +248,5 @@ void Maze::makeNodes()
         // Add the node to the list of nodes
         this->Nodes.push_back(node);
     }
+    return ss.str();
 }

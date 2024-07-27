@@ -40,8 +40,9 @@ public:
         
         // now have the start node find the path
         cout << "Finding the path" << endl;
+        cout << "Number of nodes: " << myNodes.size() << endl;
         pathCall(myNodes, startNode, currentPath);
-
+        // add the last node so the path shows the whole loop
         return shortestPath;
         // TODO: Implement return here!!!
     }
@@ -62,9 +63,9 @@ private:
             double distance = 0.0;
             for(auto edge : previousNode.getNeighbors())
             {
-                if(edge.first == nodes[0].getName())
+                if(edge.getDestination() == nodes[0].getName())
                 {
-                    distance = edge.second;
+                    distance = edge.getDistance();
                     break;
                 }
             }
@@ -74,9 +75,9 @@ private:
             // Add distance from the last node to the entrance
             for(auto edge : nodes[0].getNeighbors())
             {
-                if(edge.first == "entrance")
+                if(edge.getDestination() == "entrance")
                 {
-                    currentPath.addNode(startNode, edge.second);
+                    currentPath.addNode(startNode, edge.getDistance());
                     break;
                 }
             }
@@ -101,9 +102,9 @@ private:
             double distance = 0;
             for(auto edge : previousNode.getNeighbors())
             {
-                if(edge.first == currentNode.getName())
+                if(edge.getDestination() == currentNode.getName())
                 {
-                    distance = edge.second;
+                    distance = edge.getDistance();
                     break;
                 }
             }

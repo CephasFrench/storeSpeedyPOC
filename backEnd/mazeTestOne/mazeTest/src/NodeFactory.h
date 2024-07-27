@@ -8,14 +8,14 @@
 struct NodeFactory {
     int id;
     std::string name;
-    std::vector<std::pair<string, double>> edges; // Use std::pair<Node, int> instead of Edge
+    std::vector<Edge> edges; // Use std::pair<Node, int> instead of Edge
     std::vector<std::string> items; // New vector of strings called items
 
     NodeFactory() {
         this->id = 0;
     }
 
-    GraphNode createNode(std::string name, std::vector<std::pair<string, double>> edges, std::vector<std::string> items) {
+    GraphNode createNode(std::string name, std::vector<Edge> edges, std::vector<std::string> items) {
         this->name = name;
         this->edges = edges;
         this->items = items;
@@ -24,7 +24,7 @@ struct NodeFactory {
         return node; 
     }
 
-    GraphNode createNode(std::string name, std::vector<std::pair<string, double>> edges) {
+    GraphNode createNode(std::string name, std::vector<Edge> edges) {
         this->name = name;
         this->edges = edges;
         GraphNode node(id, edges, name);

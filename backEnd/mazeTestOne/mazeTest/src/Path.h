@@ -31,4 +31,29 @@ public:
     int size() const {
 		return nodes.size();
 	}
+
+    string printPath() {
+		stringstream ss;
+        for (int i = 0; i < nodes.size()-1; i++)
+        {
+            for(auto curredge : nodes[i].getNeighbors())
+			{
+                if (curredge.getDestination() == nodes[i + 1].getName())
+                {
+                    ss << curredge.printPath();
+                }
+			}
+        }
+        if (nodes.size() > 1)
+        {
+            for (auto curredge : nodes[nodes.size()-1].getNeighbors())
+            {
+                if (curredge.getDestination() == nodes.front().getName())
+                {
+                    ss << curredge.printPath();
+                }
+            }
+        }
+		return ss.str();
+	}
 };

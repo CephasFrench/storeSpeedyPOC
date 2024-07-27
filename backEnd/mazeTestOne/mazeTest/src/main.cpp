@@ -12,14 +12,20 @@ int main() {
     auto start = std::chrono::high_resolution_clock::now(); // Store the current time
 
     //////////////////////////////////////////////////////////
-    //Maze maze("testMaze.txt");
-    Maze maze("vmstoretext_readable.txt");
+    Maze maze;
+    string pathoutput = maze.start("vmstoretext_readable.txt");
     StoreGraphFactory myStoreGraphFactory;
-    cout << "diskstras done now making graph" << endl;
     StoreGraph myGraph = myStoreGraphFactory.getGraph(maze.getNodeData());
     Path path = myGraph.FindPath();
 
+
     //////////////////////////////////////////////////////////
+   /* Maze maze;
+    string pathoutput = maze.start("vmstoretext_readable.txt");
+    cout << maze.getNodeData().str();*/
+
+    //////////////////////////////////////////////////////////
+
 
     cout << "The shortest path is:" << endl;
     cout << path.size() << " nodes" << endl;
@@ -37,10 +43,6 @@ int main() {
 
     cout << "Execution time: " << minutes << " minutes, " << seconds << " seconds, " << milliseconds << " milliseconds" << endl;
 
-    cout << "the distance data" << endl;
-
-    cout << maze.getNodeData().str();
-
-
+    cout << endl << path.printPath();
     return 0;
 }

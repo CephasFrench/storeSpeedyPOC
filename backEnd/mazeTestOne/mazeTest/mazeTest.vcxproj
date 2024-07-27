@@ -127,10 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Edge.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Maze.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Edge.h" />
     <ClInclude Include="src\Maze.h" />
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\NodeFactory.h" />

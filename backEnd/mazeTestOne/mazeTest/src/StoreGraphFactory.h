@@ -48,7 +48,7 @@ public:
                         items.push_back(word);
                     }
                     // loop though and get all the aisles
-                    vector<pair<string, double>> edges;
+                    vector<Edge> edges;
                     while(true)
                     {
                         if(word == "node" || word == "exit")
@@ -61,7 +61,8 @@ public:
                         file >> aisle;
                         double distance;
                         file >> distance;
-                        edges.push_back(make_pair(aisle, distance));
+                        //edges.push_back(make_pair(aisle, distance));
+                        edges.push_back(Edge(aisle, distance));
                         file >> word;
                     }
                     // Now have all the data to create a node
@@ -118,10 +119,10 @@ public:
                     items.push_back(word);
                 }
                 // loop though and get all the aisles
-                vector<pair<string, double>> edges;
+                vector<Edge> edges;
                 while (true)
                 {
-                    if (word == "node" || word == "exit")
+                    if (word == "node" || word == "exit")// std::all_of(word.begin(), word.end(), ::isdigit))
                     {
                         break;
                     }
@@ -129,15 +130,30 @@ public:
                     //string aisle = word;
                     string aisle;
                     input >> aisle;
-                    double distance;
+                    int distance;
                     input >> distance;
-                    edges.push_back(make_pair(aisle, distance));
+                    // Now we known that the next word is a cordinate
+                    vector<pair<int, int>> cordinates;
                     input >> word;
+                    while (word != "aisles" and word != "node" and word != "exit")
+                    {
+                        pair<int, int> cordinate;
+                        cordinate.first = stoi(word);
+                        input >> word;
+                        cordinate.second = stoi(word);
+                        cordinates.push_back(cordinate);
+                        input >> word;
+                    }
+
+                    //edges.push_back(make_pair(aisle, distance));
+                    edges.push_back(Edge(aisle, make_pair(distance, cordinates)));
+                    //input >> word;
                 }
                 // Now have all the data to create a node
                 GraphNode node = nodeFactory.createNode(name, edges, items);
                 // Add node to vector
                 nodes.push_back(node);
+
             }
             else if (word == "exit")
             {
