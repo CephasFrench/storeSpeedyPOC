@@ -9,7 +9,7 @@
 using namespace std;
 
 int main() {
-    auto start = std::chrono::high_resolution_clock::now(); // Store the current time
+   // auto start = std::chrono::high_resolution_clock::now(); // Store the current time
 
     //////////////////////////////////////////////////////////
     Maze maze;
