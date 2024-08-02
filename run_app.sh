@@ -22,12 +22,15 @@ check_for_updates() {
 # Function to kill processes using a specific port
 kill_process_on_port() {
     PORT=$1
-    if command -v lsof > /dev/null; then
-        lsof -ti tcp:$PORT | xargs kill -9
-    elif command -v netstat > /dev/null; then
-        fuser -k "$PORT"/tcp
+    if command -v ss > /dev/null; then
+        PID=$(ss -lptn "sport = :$PORT" | awk 'NR==2 {print $7}' | cut -d, -f2 | cut -d= -f2)
+        if [ -n "$PID" ]; then
+            kill -9 "$PID"
+        else
+            echo "No process found on port $PORT"
+        fi
     else
-        echo "Neither lsof nor netstat is available to kill processes on port $PORT"
+        echo "ss is not available to kill processes on port $PORT"
         exit 1
     fi
 }
@@ -79,7 +82,7 @@ start_frontend() {
     echo "Starting frontend..."
 
     # Use the absolute path to the frontEnd directory
-    FRONTEND_DIR="/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd"
+    FRONTEND_DIR="/mnt/c/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd"
 
     # Kill any process using port 8081 and 8082
     kill_process_on_port 8081
@@ -97,19 +100,9 @@ start_frontend() {
     npm install || { echo "Failed to install frontend dependencies"; exit 1; }
 
     # Open a new terminal window and run npx expo start
-    if command -v osascript > /dev/null; then
-        # macOS specific command to open a new terminal window
-        osascript <<EOF
-tell application "Terminal"
-    do script "cd $FRONTEND_DIR && npx expo start --port 8082"
-end tell
-EOF
-    elif command -v gnome-terminal > /dev/null; then
-        # Linux with GNOME Terminal
-        gnome-terminal -- bash -c "cd $FRONTEND_DIR && npx expo start --port 8082; exec bash"
-    elif command -v xterm > /dev/null; then
-        # Generic X terminal emulator
-        xterm -hold -e "cd $FRONTEND_DIR && npx expo start --port 8082"
+    if command -v wslview > /dev/null; then
+        # Use wslview to open a new terminal window
+        wslview cmd.exe /C start cmd.exe /K "cd $FRONTEND_DIR && npx expo start --port 8082"
     else
         echo "No compatible terminal emulator found to open a new window for the frontend."
         exit 1
