@@ -1,0 +1,4 @@
+adaptive-icon.png 
+favicon.png 
+icon.png 
+splash.png 

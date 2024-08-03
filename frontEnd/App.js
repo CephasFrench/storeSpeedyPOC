@@ -3,8 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, SafeAreaView, FlatList
 import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
-import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
-import { USR_INPT_CHAR_LMT } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
+import { BOOLEAN_VALUES, USR_INPT_CHAR_LMT } from './config'; // Corrected relative paths
 
 const validLocations = ["Default", "ValleyMills"];
 const SERVER_URL     = "http://localhost:8080";     // Replace localhost with true server URL

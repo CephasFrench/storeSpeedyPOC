@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, Switch, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { BOOLEAN_VALUES } from '/Users/cameronhardin/Desktop/storeSpeedyPOC/frontEnd/config';
+import { BOOLEAN_VALUES } from '../config'; // Corrected relative path
 
 // SettingsScreen component to manage application settings
 export default function SettingsScreen() {
@@ -141,4 +141,3 @@ const styles = StyleSheet.create({
 * 
 * This component will render the settings screen with the ability to toggle notifications, developer mode, and ping the server.
 */
-
